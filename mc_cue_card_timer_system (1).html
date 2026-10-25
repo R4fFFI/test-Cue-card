@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC Teleprompter & Live Timer — Digital System Lab 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            bg: '#0E1015',
+                            card: '#161922',
+                            border: '#262B38',
+                            hover: '#1E2330',
+                        },
+                        tungsten: {
+                            DEFAULT: '#F59E0B',
+                            tint: 'rgba(245, 158, 11, 0.12)',
+                            border: 'rgba(245, 158, 11, 0.35)',
+                        },
+                        emerald: {
+                            studio: '#10B981',
+                        },
+                        crimson: {
+                            studio: '#EF4444',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0E1015;
+            color: #F1F5F9;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .tabular-numbers {
+            font-variant-numeric: tabular-nums;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Studio Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0E1015;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262B38;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3B4254;
+        }
+
+        /* High-contrast tungsten variable tags for MC instructions */
+        .script-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(245, 158, 11, 0.14);
+            color: #FBBF24;
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px border-amber-500/40;
+            font-weight: 700;
+            margin: 0 2px;
+            letter-spacing: 0.01em;
+            box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.25);
+        }
+
+        /* Broadcast Status Pulse Animation */
+        @keyframes broadcastPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.95); }
+        }
+        .live-dot {
+            animation: broadcastPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Focus rings and crisp transitions */
+        button:focus-visible {
+            outline: 2px solid #F59E0B;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden antialiased selection:bg-amber-500/20 selection:text-amber-200">
+
+    <!-- TOP HEADER / STUDIO BROADCAST MONITORING BAR -->
+    <header class="w-full bg-[#0E1015]/95 backdrop-blur-md border-b border-[#262B38] sticky top-0 z-30 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            
+            <!-- Left: Studio Identity & Mode Switch -->
+            <div class="flex items-center justify-between lg:justify-start gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-[#161922] border border-[#262B38] flex items-center justify-center text-amber-500 shadow-inner">
+                        <i class="fa-solid fa-tower-broadcast text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-bold text-sm sm:text-base tracking-tight text-slate-100 uppercase">MC Teleprompter</h1>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-widest">
+                                DSL 2026
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">Young Investor UNPAD</p>
+                    </div>
+                </div>
+
+                <!-- Sync Mode Toggle -->
+                <button id="autoSyncBtn" onclick="toggleAutoSync()" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20" title="Tekan (M) untuk ganti mode">
+                    <span class="relative flex h-2 w-2">
+                      <span id="autoSyncPing" class="live-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400"></span>
+                      <span id="autoSyncDot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span id="autoSyncLabel" class="tracking-wide">AUTO SYNC</span>
+                </button>
+            </div>
+
+            <!-- Right: Real-time Timers & Live Schedule Tracking -->
+            <div class="flex flex-wrap sm:flex-nowrap items-stretch justify-end gap-2.5">
+                
+                <!-- 1. Real-Time Clock (WIB) -->
+                <div class="flex items-center gap-2.5 px-3.5 py-2 bg-[#161922] border border-[#262B38] rounded-xl">
+                    <i class="fa-regular fa-clock text-slate-400 text-sm"></i>
+                    <div class="text-right">
+                        <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Jam WIB Real-Time</div>
+                        <div id="realTimeClock" class="tabular-numbers font-bold text-sm sm:text-base text-slate-100 leading-tight">00:00:00</div>
+                    </div>
+                </div>
+
+                <!-- 2. Real-Time Agenda Status -->
+                <div class="flex-1 min-w-[170px] max-w-[240px] px-3.5 py-2 bg-[#161922] border border-[#262B38] rounded-xl flex flex-col justify-center">
+                    <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
+                        <span>Status Rundown Live</span>
+                        <span id="liveStatusBadge" class="text-[9px] font-bold text-emerald-400">Aktif</span>
+                    </div>
+                    <div id="realTimeAgendaTitle" class="font-semibold text-xs sm:text-sm text-slate-200 truncate mt-0.5">Memuat jadwal...</div>
+                </div>
+
+                <!-- 3. Countdown To Next Agenda -->
+                <div id="countdownBox" class="flex-1 min-w-[190px] max-w-[260px] px-3.5 py-2 bg-[#161922] border border-[#262B38] rounded-xl flex flex-col justify-center transition-colors">
+                    <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
+                        <span>Menuju Next Agenda</span>
+                        <span id="nextCountdown" class="tabular-numbers font-bold text-amber-400 text-xs sm:text-sm">00m 00s</span>
+                    </div>
+                    <div id="nextAgendaTitle" class="font-medium text-xs text-slate-300 truncate mt-0.5">Selanjutnya: -</div>
+                </div>
+
+                <!-- Font Size & Screen Actions -->
+                <div class="flex items-center gap-1 border-l border-[#262B38] pl-2">
+                    <button onclick="changeFontSize(-2)" class="w-8 h-8 rounded-lg bg-[#161922] border border-[#262B38] hover:bg-[#1E2330] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition" title="Kecilkan Teks">
+                        A-
+                    </button>
+                    <button onclick="resetFontSize()" class="w-8 h-8 rounded-lg bg-[#161922] border border-[#262B38] hover:bg-[#1E2330] text-slate-400 hover:text-white flex items-center justify-center text-[10px] font-mono transition" title="Reset Ukuran Teks">
+                        100%
+                    </button>
+                    <button onclick="changeFontSize(2)" class="w-8 h-8 rounded-lg bg-[#161922] border border-[#262B38] hover:bg-[#1E2330] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition" title="Besarkan Teks">
+                        A+
+                    </button>
+                    <button onclick="toggleFullScreen()" class="w-8 h-8 rounded-lg bg-[#161922] border border-[#262B38] hover:bg-[#1E2330] text-slate-300 hover:text-white flex items-center justify-center text-xs transition" title="Layar Penuh (F)">
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN BROADCAST CUE CARD & TELEPROMPTER VIEW -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 flex flex-col justify-center relative my-auto" id="touchArea">
+
+        <!-- Navigation Arrows (Side Floating Controls) -->
+        <button onclick="prevAgenda()" class="hidden md:flex absolute -left-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-xl bg-[#161922] border border-[#262B38] text-slate-300 hover:text-white hover:bg-[#1E2330] hover:border-amber-500/50 items-center justify-center transition shadow-2xl group" title="Agenda Sebelumnya (Panah Kiri / K)">
+            <i class="fa-solid fa-chevron-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
+        </button>
+
+        <button onclick="nextAgenda()" class="hidden md:flex absolute -right-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-xl bg-[#161922] border border-[#262B38] text-slate-300 hover:text-white hover:bg-[#1E2330] hover:border-amber-500/50 items-center justify-center transition shadow-2xl group" title="Agenda Selanjutnya (Panah Kanan / J / Space)">
+            <i class="fa-solid fa-chevron-right text-sm group-hover:translate-x-0.5 transition-transform"></i>
+        </button>
+
+        <!-- Main Cue Card Surface -->
+        <div class="bg-[#161922] border border-[#262B38] rounded-2xl shadow-2xl p-6 sm:p-10 flex flex-col min-h-[420px] sm:min-h-[480px] justify-between relative overflow-hidden">
+            
+            <!-- Top Banner Card Info -->
+            <div class="flex items-center justify-between pb-5 border-b border-[#262B38] gap-4">
+                <div class="flex items-center gap-3">
+                    <span id="cardDayBadge" class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        Day 1 (Web Dev)
+                    </span>
+                    <span id="cardTimeRange" class="tabular-numbers px-3 py-1 rounded-lg text-xs font-medium bg-[#0E1015] text-slate-300 border border-[#262B38]">
+                        18.45 - 19.00 (15 mnt)
+                    </span>
+                </div>
+
+                <!-- Gesture hint for mobile touch -->
+                <div class="text-[11px] text-slate-500 md:hidden flex items-center gap-1.5 font-medium">
+                    <i class="fa-solid fa-hand-pointer text-amber-500/70"></i>
+                    <span>Swipe Layar</span>
+                </div>
+
+                <div class="hidden md:flex items-center gap-2 text-xs text-slate-400">
+                    <span>Pindah Agenda:</span>
+                    <kbd class="px-2 py-0.5 bg-[#0E1015] border border-[#262B38] rounded text-slate-300 font-mono text-[11px]">← Prev</kbd>
+                    <kbd class="px-2 py-0.5 bg-[#0E1015] border border-[#262B38] rounded text-slate-300 font-mono text-[11px]">Next → / Space</kbd>
+                </div>
+            </div>
+
+            <!-- Active Agenda Title Display -->
+            <div class="my-4">
+                <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Judul Agenda:</span>
+                <h2 id="cardAgendaTitle" class="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight mt-0.5">
+                    Preparation & Open gate
+                </h2>
+            </div>
+
+            <!-- TELEPROMPTER SCRIPT CONTAINER -->
+            <div class="flex-1 py-4 my-2 overflow-y-auto max-h-[300px] sm:max-h-[360px] pr-3" id="scriptScrollContainer">
+                <div id="cardScriptContent" class="text-slate-100 font-normal leading-relaxed transition-all duration-150 tracking-normal">
+                    <!-- Script Content Rendered Here -->
+                </div>
+            </div>
+
+            <!-- Card Bottom Action Row -->
+            <div class="pt-5 border-t border-[#262B38] flex items-center justify-between gap-3">
+                
+                <button onclick="prevAgenda()" class="px-4 py-2 bg-[#0E1015] hover:bg-[#1E2330] text-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 border border-[#262B38] transition md:hidden">
+                    <i class="fa-solid fa-arrow-left"></i> Prev
+                </button>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="openAgendaModal()" class="px-4 py-2 bg-[#0E1015] hover:bg-[#1E2330] border border-[#262B38] hover:border-amber-500/40 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition" title="Lihat & Jump ke Agenda (R)">
+                        <i class="fa-solid fa-list-ul text-amber-500"></i>
+                        <span>Rundown List</span>
+                    </button>
+                </div>
+
+                <button onclick="nextAgenda()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-amber-500/10 md:hidden">
+                    Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER CONTROLS & STATUS INDICATORS (Kiri Bawah & Kanan Bawah) -->
+    <footer class="w-full bg-[#0E1015] border-t border-[#262B38] px-4 py-3.5 z-30">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            
+            <!-- KIRI BAWAH: TOGGLE DAY 1 VS DAY 2 -->
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Pilih Hari:</span>
+                <div class="bg-[#161922] p-1 rounded-xl border border-[#262B38] flex gap-1">
+                    <button id="day1Btn" onclick="switchDay(1)" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow">
+                        Day 1 (Web Dev)
+                    </button>
+                    <button id="day2Btn" onclick="switchDay(2)" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1E2330]">
+                        Day 2 (Data Analysis)
+                    </button>
+                </div>
+            </div>
+
+            <!-- KANAN BAWAH: INDIKATOR NOMOR & JUDUL AGENDA AKTIF -->
+            <div class="flex items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
+                <div class="bg-[#161922] px-4 py-2 rounded-xl border border-[#262B38] text-xs text-slate-300 flex items-center gap-2.5">
+                    <span class="tabular-numbers text-amber-400 font-bold" id="currentAgendaIndexText">Agenda 01/11</span>
+                    <span class="text-slate-600">•</span>
+                    <span class="font-medium text-slate-200 truncate max-w-[200px] sm:max-w-[300px]" id="currentScriptAgendaName">
+                        Preparation & Open gate
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- RUNDOWN LIST MODAL (Quick Jump) -->
+    <div id="agendaModal" class="fixed inset-0 z-50 bg-[#0E1015]/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#161922] border border-[#262B38] rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-[#262B38] flex items-center justify-between bg-[#0E1015]">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-list-check text-amber-500"></i>
+                    <h3 class="font-bold text-slate-100 text-sm sm:text-base">Daftar Rundown Lengkap (<span id="modalDayTitle">Day 1</span>)</h3>
+                </div>
+                <button onclick="closeAgendaModal()" class="w-8 h-8 rounded-lg bg-[#161922] text-slate-400 hover:text-white flex items-center justify-center border border-[#262B38]">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 overflow-y-auto flex-1 space-y-2" id="agendaListContainer">
+                <!-- Agenda items rendered dynamically -->
+            </div>
+
+            <div class="p-3 border-t border-[#262B38] bg-[#0E1015] flex justify-end">
+                <button onclick="closeAgendaModal()" class="px-4 py-2 bg-[#161922] hover:bg-[#1E2330] text-slate-300 text-xs font-semibold rounded-xl border border-[#262B38]">
+                    Tutup Modal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT BROADCAST LOGIC & SCHEDULE DATA -->
+    <script>
+        // FULL SCHEDULE DATA (EXACTLY AS PROVIDED)
+        const scheduleData = {
+            1: [
+                {
+                    start: "18.45",
+                    end: "19.00",
+                    duration: "15 mnt",
+                    agenda: "Preparation & Open gate",
+                    script: "Halo teman-teman semua! Selamat datang di Google Meet Digital System Lab Day 1! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman kalian ya. Boleh disiapin juga catatan, karena malam ini kita bakal bedah topik yang super seru seputar Web Development & Pemanfaatan AI dalam Pengembangan Website!"
+                },
+                {
+                    start: "19.00",
+                    end: "19.02",
+                    duration: "2 mnt",
+                    agenda: "Opening By MC",
+                    script: "Selamat malam semuanya! Yang terhormat para Project Supervisors, Project Officer, panitia yang bertugas, serta seluruh peserta Digital System Lab yang luar biasa antusias malam ini! Kenalin, aku Rafboy dari divisi Technology Operations Young Investor UNPAD, yang bakal menemani teman-teman selama sesi malam ini. Di hari pertama ini, kita akan masuk ke topik Web Development. Terima kasih banyak buat teman-teman yang sudah meluangkan waktunya di tengah kesibukan!"
+                },
+                {
+                    start: "19.02",
+                    end: "19.05",
+                    duration: "3 mnt",
+                    agenda: "Pemaparan Profil Narsum",
+                    script: "Nah, biar makin afdal dan kenal dengan sosok luar biasa yang bakal membagikan ilmunya malam ini, yuk kita tengok profil narasumber hebat kita di layar! Pemateri kita kali ini punya segudang pengalaman keren di bidang Web Development. Mantap banget kan? Pasti udah gak sabar buat menimba ilmu langsung dari ahlinya!"
+                },
+                {
+                    start: "19.05",
+                    end: "19.10",
+                    duration: "5 mnt",
+                    agenda: "Expectation Setting",
+                    script: "Sebelum materi dimulai, aku pengen denger dong dari kalian. Coba aku tunjuk satu orang ya... [Sebut nama peserta], boleh unmute mic atau tulis di kolom chat, apa nih ekspektasi kamu buat sesi Web Development malam ini? ... Keren banget! Semoga seluruh ekspektasi itu terjawab tuntas malam ini ya. Tanpa nunggu lama lagi, yuk langsung aja kita masuk ke sesi materi!"
+                },
+                {
+                    start: "19.10",
+                    end: "20.10",
+                    duration: "60 mnt",
+                    agenda: "Materi dari Narsum",
+                    script: "Kepada [Sebut nama narsum], waktu dan layar aku persilakan!"
+                },
+                {
+                    start: "20.10",
+                    end: "20.25",
+                    duration: "15 mnt",
+                    agenda: "QnA",
+                    script: "Wah, dapet ilmu daging banget ya dari narasumber kita! Sekarang giliran kalian yang beraksi. Buat yang punya pertanyaan, langsung aja tekan tombol raise hand buat unmute, atau ketik pertanyaan kalian di kolom chat ya!"
+                },
+                {
+                    start: "20.25",
+                    end: "20.55",
+                    duration: "30 mnt",
+                    agenda: "Post Test (Simulasi bikin website)",
+                    script: "Nah, biar tau seberapa jago pemahaman kita malam ini, yuk kita lanjut ke sesi Post Test & Simulasi Pembuatan Website! Link-nya udah dibagikan teman-teman panitia di kolom chat. Waktu kalian 30 menit, selamat mengerjakan dan lakukan yang terbaik!"
+                },
+                {
+                    start: "20.55",
+                    end: "20.58",
+                    duration: "3 mnt",
+                    agenda: "Pemberian Sertifikat",
+                    script: "Luar biasa banget antusiasme simulasinya! Sebagai bentuk apresiasi dan rasa terima kasih, aku mewakili panitia mau menyerahkan sertifikat secara simbolis kepada [Sebut nama narsum]. Makasih banyak ya atas ilmu dan waktunya malam ini!"
+                },
+                {
+                    start: "20.58",
+                    end: "21.00",
+                    duration: "2 mnt",
+                    agenda: "Dokumentasi",
+                    script: "Sebelum narasumber kita pamit, yuk teman-teman buka kameranya sebentar biar kita bisa foto bareng! Pasang senyum paling manis ya. Aku hitung: 1... 2... 3... cheers!"
+                },
+                {
+                    start: "21.00",
+                    end: "21.05",
+                    duration: "5 mnt",
+                    agenda: "Survey Feedback",
+                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui link yang dibagikan panitia di kolom chat atau QR code di layar. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terisi ya!"
+                },
+                {
+                    start: "21.05",
+                    end: "21.10",
+                    duration: "5 mnt",
+                    agenda: "Penutupan",
+                    script: "Terima kasih banyak buat narasumber dan teman-teman semua yang udah semangat dari awal sampai akhir. Jangan lupa, besok kita masih punya Day 2 dengan topik yang gak kalah seru yaitu Data Analysis! Sampai ketemu besok malam jam 18:45 WIB ya. Saya Rafboy pamit undur diri. Selamat malam!"
+                }
+            ],
+            2: [
+                {
+                    start: "18.45",
+                    end: "19.00",
+                    duration: "15 mnt",
+                    agenda: "Preparation & Open gate",
+                    script: "Selamat malam teman-teman semua! Selamat datang di Digital System Lab Day 2! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman dan siapkan catatan serta laptop kalian ya, karena malam ini kita bakal bedah topik Data Analysis!"
+                },
+                {
+                    start: "19.00",
+                    end: "19.05",
+                    duration: "5 mnt",
+                    agenda: "Opening By MC",
+                    script: "Selamat malam semuanya! Selamat datang di hari kedua Digital System Lab, program kerja Departemen Programme divisi Technology Operations, Young Investor UNPAD. Saya Rafboy, dan akan menemani teman-teman selama sesi malam ini. Kalau kemarin kita belajar Web Development, malam ini kita masuk ke topik Data Analysis."
+                },
+                {
+                    start: "19.05",
+                    end: "19.10",
+                    duration: "5 mnt",
+                    agenda: "Expectation Setting",
+                    script: "Sebelum masuk ke materi, saya ingin tahu, apa sih harapan teman-teman di sesi hari ini? Saya persilakan [Nama Peserta] untuk menyampaikan harapannya. Silakan nyalakan mic-nya ya... Terima kasih, [Nama Peserta]! Semoga harapannya tercapai malam ini. Kalau begitu, tanpa menunggu lama, saya persilakan [Sapaan] [Nama Narsum] untuk memaparkan materinya. Waktu dan layar kami serahkan kepada Anda."
+                },
+                {
+                    start: "19.10",
+                    end: "20.10",
+                    duration: "60 mnt",
+                    agenda: "Materi dari narasumber",
+                    script: "Terima kasih. Kita lanjut ke sesi utama, yaitu pemaparan materi Data Analysis. Kepada [Nama narasumber], waktu dan layar kami persilakan."
+                },
+                {
+                    start: "20.10",
+                    end: "20.20",
+                    duration: "10 mnt",
+                    agenda: "QnA",
+                    script: "Terima kasih kepada [Nama narasumber] atas materi yang sangat bermanfaat. Selanjutnya kita masuk ke sesi tanya jawab. Bagi teman-teman yang ingin bertanya, silakan gunakan fitur raise hand atau kirim pertanyaan melalui kolom chat."
+                },
+                {
+                    start: "20.20",
+                    end: "20.50",
+                    duration: "30 mnt",
+                    agenda: "Simulasi (Study Case Data)",
+                    script: "Berikutnya adalah sesi Simulasi Studi Kasus Data & Praktikum. Silakan teman-teman mengakses tautan/platform studi kasus dan mengerjakan sesuai arahan panitia. Pastikan hasil simulasi dapat diselesaikan tepat waktu."
+                },
+                {
+                    start: "20.50",
+                    end: "20.53",
+                    duration: "3 mnt",
+                    agenda: "Pemberian sertifikat",
+                    script: "Kita lanjutkan dengan pemberian sertifikat kepada narasumber sebagai bentuk apresiasi atas kontribusi dan ilmu yang telah dibagikan. Kepada [Nama pemberi sertifikat] dan [Nama narasumber], dipersilakan."
+                },
+                {
+                    start: "20.53",
+                    end: "20.55",
+                    duration: "2 mnt",
+                    agenda: "Dokumentasi",
+                    script: "Selanjutnya, kita akan melakukan dokumentasi bersama. Silakan teman-teman mengikuti arahan panitia dan menyalakan kamera jika memungkinkan. Kita tunggu sampai dokumentasi selesai."
+                },
+                {
+                    start: "20.55",
+                    end: "21.00",
+                    duration: "5 mnt",
+                    agenda: "Survey feedback",
+                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui tautan survey. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terkirim."
+                },
+                {
+                    start: "21.00",
+                    end: "21.05",
+                    duration: "5 mnt",
+                    agenda: "Penutupan",
+                    script: "Teman-teman, sampailah kita di penghujung seluruh rangkaian Digital System Lab 2026. Terima kasih kepada narasumber, panitia, dan seluruh peserta yang telah berpartisipasi. Semoga ilmu yang didapat bermanfaat. Saya Rafboy pamit undur diri. Selamat malam!"
+                }
+            ]
+        };
+
+        // APPLICATION STATE
+        let currentDay = 1;
+        let currentIndex = 0;
+        let isAutoSync = true;
+        let fontSizePx = 22;
+
+        // Touch swipe tracking variables
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // ON LOAD INITIALIZATION
+        window.onload = function() {
+            renderCard();
+            updateClockAndTimers();
+            setInterval(updateClockAndTimers, 1000);
+            setupTouchGestures();
+            setupKeyboardShortcuts();
+        };
+
+        // SWITCH DAY (Day 1 vs Day 2)
+        function switchDay(day) {
+            currentDay = day;
+            currentIndex = 0;
+            
+            const d1 = document.getElementById('day1Btn');
+            const d2 = document.getElementById('day2Btn');
+
+            if (day === 1) {
+                d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow";
+                d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1E2330]";
+            } else {
+                d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow";
+                d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1E2330]";
+            }
+
+            renderCard();
+            updateClockAndTimers();
+        }
+
+        // RENDER ACTIVE CUE CARD
+        function renderCard() {
+            const currentList = scheduleData[currentDay];
+            if (!currentList || currentList.length === 0) return;
+
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= currentList.length) currentIndex = currentList.length - 1;
+
+            const item = currentList[currentIndex];
+
+            // Render Badges and Titles
+            document.getElementById('cardDayBadge').innerText = currentDay === 1 ? 'Day 1 (Web Dev)' : 'Day 2 (Data Analysis)';
+            document.getElementById('cardTimeRange').innerText = `${item.start} - ${item.end} (${item.duration})`;
+            document.getElementById('cardAgendaTitle').innerText = item.agenda;
+
+            // Highlight Variable Tags like [Sebut nama narsum]
+            let formattedScript = item.script.replace(/\[(.*?)\]/g, `<span class="script-tag"><i class="fa-solid fa-tag text-[10px] mr-1 opacity-70"></i>$1</span>`);
+            
+            const scriptEl = document.getElementById('cardScriptContent');
+            scriptEl.innerHTML = formattedScript;
+            scriptEl.style.fontSize = `${fontSizePx}px`;
+
+            // Reset scroll position
+            document.getElementById('scriptScrollContainer').scrollTop = 0;
+
+            // Update Bottom Indicators
+            const paddedIndex = String(currentIndex + 1).padStart(2, '0');
+            const paddedTotal = String(currentList.length).padStart(2, '0');
+            document.getElementById('currentAgendaIndexText').innerText = `Agenda ${paddedIndex}/${paddedTotal}`;
+            document.getElementById('currentScriptAgendaName').innerText = item.agenda;
+        }
+
+        // NAVIGATION CONTROLS
+        function nextAgenda() {
+            const max = scheduleData[currentDay].length;
+            if (currentIndex < max - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        }
+
+        function prevAgenda() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        }
+
+        function jumpToAgenda(index) {
+            currentIndex = index;
+            renderCard();
+            closeAgendaModal();
+        }
+
+        // REAL-TIME CLOCK & SCHEDULE CALCULATION
+        function updateClockAndTimers() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('realTimeClock').innerText = `${hours}:${minutes}:${seconds}`;
+
+            const nowTotalMinutes = now.getHours() * 60 + now.getMinutes();
+            const currentList = scheduleData[currentDay];
+
+            let activeRealIndex = -1;
+            let nextRealIndex = -1;
+
+            for (let i = 0; i < currentList.length; i++) {
+                const [startH, startM] = currentList[i].start.split('.').map(Number);
+                const [endH, endM] = currentList[i].end.split('.').map(Number);
+
+                const startTotal = startH * 60 + startM;
+                const endTotal = endH * 60 + endM;
+
+                if (nowTotalMinutes >= startTotal && nowTotalMinutes < endTotal) {
+                    activeRealIndex = i;
+                    nextRealIndex = i + 1 < currentList.length ? i + 1 : -1;
+                    break;
+                } else if (nowTotalMinutes < startTotal) {
+                    if (activeRealIndex === -1) {
+                        nextRealIndex = i;
+                    }
+                    break;
+                }
+            }
+
+            const realAgendaTitleEl = document.getElementById('realTimeAgendaTitle');
+            const nextAgendaTitleEl = document.getElementById('nextAgendaTitle');
+            const nextCountdownEl = document.getElementById('nextCountdown');
+            const countdownBox = document.getElementById('countdownBox');
+            const liveStatusBadge = document.getElementById('liveStatusBadge');
+
+            if (activeRealIndex !== -1) {
+                const activeItem = currentList[activeRealIndex];
+                realAgendaTitleEl.innerText = `${activeItem.start} - ${activeItem.agenda}`;
+                liveStatusBadge.innerText = "LIVE";
+                liveStatusBadge.className = "text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20";
+                
+                if (isAutoSync && currentIndex !== activeRealIndex) {
+                    currentIndex = activeRealIndex;
+                    renderCard();
+                }
+            } else {
+                realAgendaTitleEl.innerText = "Luar Sesi / Standby";
+                liveStatusBadge.innerText = "STANDBY";
+                liveStatusBadge.className = "text-[9px] font-bold text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded";
+            }
+
+            // Countdown to Next Agenda
+            if (nextRealIndex !== -1 && nextRealIndex < currentList.length) {
+                const nextItem = currentList[nextRealIndex];
+                nextAgendaTitleEl.innerText = `Selanjutnya: ${nextItem.start} - ${nextItem.agenda}`;
+
+                const [nextH, nextM] = nextItem.start.split('.').map(Number);
+                const targetTotalSeconds = (nextH * 60 + nextM) * 60;
+                const currentTotalSeconds = (now.getHours() * 60 + now.getMinutes()) * 60 + now.getSeconds();
+
+                let diffSeconds = targetTotalSeconds - currentTotalSeconds;
+                if (diffSeconds > 0) {
+                    const diffM = Math.floor(diffSeconds / 60);
+                    const diffS = diffSeconds % 60;
+                    
+                    // Alert Crimson if less than 2 minutes remaining
+                    if (diffM < 2) {
+                        nextCountdownEl.className = "tabular-numbers font-bold text-crimson-studio text-xs sm:text-sm animate-pulse";
+                        countdownBox.className = "flex-1 min-w-[190px] max-w-[260px] px-3.5 py-2 bg-rose-950/20 border border-crimson-studio/40 rounded-xl flex flex-col justify-center transition-colors";
+                    } else {
+                        nextCountdownEl.className = "tabular-numbers font-bold text-amber-400 text-xs sm:text-sm";
+                        countdownBox.className = "flex-1 min-w-[190px] max-w-[260px] px-3.5 py-2 bg-[#161922] border border-[#262B38] rounded-xl flex flex-col justify-center transition-colors";
+                    }
+
+                    nextCountdownEl.innerText = `${String(diffM).padStart(2, '0')}m ${String(diffS).padStart(2, '0')}s`;
+                } else {
+                    nextCountdownEl.innerText = "00m 00s";
+                }
+            } else {
+                nextAgendaTitleEl.innerText = "Selanjutnya: Selesai";
+                nextCountdownEl.innerText = "--m --s";
+                countdownBox.className = "flex-1 min-w-[190px] max-w-[260px] px-3.5 py-2 bg-[#161922] border border-[#262B38] rounded-xl flex flex-col justify-center";
+            }
+        }
+
+        // TOGGLE AUTO-SYNC MODE
+        function toggleAutoSync() {
+            isAutoSync = !isAutoSync;
+            const btn = document.getElementById('autoSyncBtn');
+            const label = document.getElementById('autoSyncLabel');
+            const ping = document.getElementById('autoSyncPing');
+            const dot = document.getElementById('autoSyncDot');
+
+            if (isAutoSync) {
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20";
+                label.innerText = "AUTO SYNC";
+                ping.className = "live-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400";
+                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
+                updateClockAndTimers();
+            } else {
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-[#161922] text-slate-400 border-[#262B38] hover:bg-[#1E2330]";
+                label.innerText = "MANUAL MODE";
+                ping.className = "hidden";
+                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-amber-500";
+            }
+        }
+
+        // FONT SIZE CONTROLLER
+        function changeFontSize(delta) {
+            fontSizePx = Math.max(16, Math.min(38, fontSizePx + delta));
+            const scriptEl = document.getElementById('cardScriptContent');
+            if (scriptEl) scriptEl.style.fontSize = `${fontSizePx}px`;
+        }
+
+        function resetFontSize() {
+            fontSizePx = 22;
+            const scriptEl = document.getElementById('cardScriptContent');
+            if (scriptEl) scriptEl.style.fontSize = `${fontSizePx}px`;
+        }
+
+        // FULLSCREEN TOGGLE
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        // TOUCH & SWIPE GESTURES
+        function setupTouchGestures() {
+            const touchArea = document.getElementById('touchArea');
+
+            touchArea.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            touchArea.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        function handleSwipe() {
+            const threshold = 40;
+            if (touchEndX < touchStartX - threshold) {
+                nextAgenda();
+            } else if (touchEndX > touchStartX + threshold) {
+                prevAgenda();
+            }
+        }
+
+        // KEYBOARD SHORTCUTS (K/Left -> Prev, J/Right/Space -> Next, M -> Toggle Sync, F -> Fullscreen, R -> Rundown)
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+                const key = e.key.toLowerCase();
+                if (e.key === 'ArrowRight' || key === 'j' || e.key === ' ') {
+                    e.preventDefault();
+                    nextAgenda();
+                } else if (e.key === 'ArrowLeft' || key === 'k') {
+                    e.preventDefault();
+                    prevAgenda();
+                } else if (key === 'm') {
+                    toggleAutoSync();
+                } else if (key === 'f') {
+                    toggleFullScreen();
+                } else if (key === 'r') {
+                    const modal = document.getElementById('agendaModal');
+                    if (modal.classList.contains('hidden')) {
+                        openAgendaModal();
+                    } else {
+                        closeAgendaModal();
+                    }
+                }
+            });
+        }
+
+        // RUNDOWN LIST MODAL
+        function openAgendaModal() {
+            const modal = document.getElementById('agendaModal');
+            const container = document.getElementById('agendaListContainer');
+            const modalDayTitle = document.getElementById('modalDayTitle');
+            
+            modalDayTitle.innerText = currentDay === 1 ? 'Day 1 (Web Dev)' : 'Day 2 (Data Analysis)';
+            const currentList = scheduleData[currentDay];
+
+            container.innerHTML = currentList.map((item, idx) => {
+                const isActive = idx === currentIndex;
+                const paddedIdx = String(idx + 1).padStart(2, '0');
+                return `
+                    <div onclick="jumpToAgenda(${idx})" class="p-3.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
+                        isActive 
+                        ? 'bg-amber-500/10 border-amber-500/40 text-amber-200' 
+                        : 'bg-[#0E1015] border-[#262B38] text-slate-300 hover:bg-[#1E2330] hover:border-slate-700'
+                    }">
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono text-xs font-bold text-slate-500">${paddedIdx}</span>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="tabular-numbers text-xs font-bold ${isActive ? 'text-amber-400' : 'text-slate-400'}">${item.start} - ${item.end}</span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#161922] text-slate-400 border border-[#262B38]">${item.duration}</span>
+                                </div>
+                                <div class="font-semibold text-sm mt-0.5 text-slate-200">${item.agenda}</div>
+                            </div>
+                        </div>
+                        ${isActive ? '<span class="text-[10px] bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded">AKTIF</span>' : '<i class="fa-solid fa-chevron-right text-xs text-slate-600"></i>'}
+                    </div>
+                `;
+            }).join('');
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAgendaModal() {
+            document.getElementById('agendaModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
