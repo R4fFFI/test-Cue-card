@@ -1,0 +1,160 @@
+{
+  "1": [
+    {
+      "start": "18.45",
+      "end": "19.00",
+      "duration": "15 menit",
+      "agenda": "Preparation & Open gate",
+      "script": "Selamat malam teman-teman semua! Sambil menunggu rekan-rekan yang lain bergabung, silakan persiapkan posisi terbaik dan paling nyaman ya. Boleh disiapin laptop atau PC kalian juga alat catatannya, karena malam ini kita bakal bedah topik yang super seru seputar Web Development! (Catatan: MC menyapa peserta & koordinasi dengan panitia)"
+    },
+    {
+      "start": "19.00",
+      "end": "19.02",
+      "duration": "2 menit",
+      "agenda": "Opening By MC",
+      "script": "Selamat malam semuanya! Yang terhormat narasumber kami hari ini, panitia yang bertugas, serta seluruh peserta Digital System Lab yang antusias sekali malam ini! Kenalin, aku Rafi dari divisi Technology Operations Young Investor UNPAD, yang bakal menemani teman-teman selama acara Digital System Lab part satu! Di hari pertama ini, kita bakal mengangkat topik utama yaitu Web Development dan Pemanfaatan AI dalam Pengembangan Website."
+    },
+    {
+      "start": "19.02",
+      "end": "19.05",
+      "duration": "3 menit",
+      "agenda": "Pemaparan Profil Narsum",
+      "script": "Nah, biar makin afdal dan kenal dengan sosok luar biasa yang bakal membagikan ilmunya malam ini, yuk kita simak bersama profil narasumber hebat kita di layar! (Pembacaan Ringkasan CV/Portofolio Narasumber oleh MC) Luar biasa banget kan rekam jejak beliau? Pasti udah gak sabar buat menimba ilmu langsung dari ahlinya!"
+    },
+    {
+      "start": "19.05",
+      "end": "19.10",
+      "duration": "5 menit",
+      "agenda": "Expectation Setting",
+      "script": "Sebelum kita masuk ke materi inti, dalam sesi kali ini kami berharap teman-teman sekalian (baca poin-poin di backdrop). Kiranya berikut yang kami ekspektasikan dari teman-teman sekalian, aku juga mau dengar dari kalian, boleh sampaikan harapan atau ekspektasi yang ingin didapatkan dari sesi Web Development malam ini di kolom komentar! (Membaca respon peserta dengan antusias) Keren banget harapannya! Semoga seluruh poin ekspektasi tadi bisa terjawab tuntas malam ini ya. Tanpa berlama-lama lagi, mari kita masuk ke sesi pemaparan materi. Bagi teman-teman sekalian mohon mengikuti materi dengan seksama karna kita akan mencoba langsung membuat website! Baik, kepada [Sapaan/Nama Narsum Kak Fachri], waktu dan tempat kami persilakan."
+    },
+    {
+      "start": "19.10",
+      "end": "20.10",
+      "duration": "60 menit",
+      "agenda": "Materi dari Narsum",
+      "script": "Kepada Kak Fachri, waktu dan tempat kami persilakan."
+    },
+    {
+      "start": "20.10",
+      "end": "20.30",
+      "duration": "20 menit",
+      "agenda": "Simulasi Website",
+      "script": "(Wah sangat jelas dan bisa diikuti arahan membuat website dari Kak Fachri! Pasti dari teman-teman sekalian ada yang sudah sampai langkah ke-6. Bisa dilanjutkan dengan latihan berikut: dipilih maksimal 3 fitur dari 4 latihan yang diberikan Kak Fachri. Kita kasih waktu 20 menit, selamat menyempurnakan websitenya karna setelah ini teman-teman sekalian mempresentasikan hasil terbaiknya! Remind waktu: 10 menit & 5 menit. Waktunya habis, setelah ini akan masuk sesi presentasi partisipan)."
+    },
+    {
+      "start": "20.30",
+      "end": "20.40",
+      "duration": "10 menit",
+      "agenda": "Presentasi",
+      "script": "(Waktu habis! Ini yang paling dinanti, ingin lihat progress yang sudah terbukti dari partisipan. Sekarang saatnya teman-teman buat memaparkan hasilnya, ajak buat yang mau volunteer presentasiin)."
+    },
+    {
+      "start": "20.40",
+      "end": "20.55",
+      "duration": "15 menit",
+      "agenda": "QnA",
+      "script": "Wah, (apresiasi semua partisipan dari simulasinya) dan wawasan yang betul-betul daging dan insightful banget ya seputar Web Development! Terima kasih banyak Kak Fachri. Sekarang saatnya giliran teman-teman peserta yang beraksi. Bagi yang memiliki pertanyaan atau ingin berdiskusi langsung, silakan gunakan fitur Raise Hand untuk unmute, atau ketik pertanyaan kalian melalui kolom chat dengan format nama dan pertanyaan. Yuk, mumpung ada ahlinya langsung di sini!"
+    },
+    {
+      "start": "20.55",
+      "end": "20.58",
+      "duration": "3 menit",
+      "agenda": "Pemberian Sertifikat",
+      "script": "Applause dulu dong buat semangat teman-teman dalam menyelesaikan simulasinya! Luar biasa! Sebagai bentuk apresiasi dan rasa terima kasih yang setinggi-tingginya dari panitia Young Investor UNPAD, kami ingin menyerahkan sertifikat secara simbolis kepada narasumber hebat kita, Kak Fachri. (Procure menayangkan backdrop sertifikat) Terima kasih banyak [Sapaan/Nama Narsum Kak Fachri] atas pemaparan ilmu dan bimbingannya yang sangat bermanfaat malam ini!"
+    },
+    {
+      "start": "20.58",
+      "end": "21.00",
+      "duration": "2 menit",
+      "agenda": "Dokumentasi",
+      "script": "Sebelum narasumber kita berpamitan, mari kita abadikan momen malam hari ini! Kepada teman-teman peserta, yuk dinyalakan kameranya sebentar dan pasang senyum terbaik kalian. Operator siap? Aku hitung ya: 1... 2... 3... gaya YI 1... 2... 3... Mantap, terima kasih semuanya!"
+    },
+    {
+      "start": "21.00",
+      "end": "21.05",
+      "duration": "5 menit",
+      "agenda": "Survey Feedback",
+      "script": "Teman-teman, sebelum kita berpisah, mohon bantuannya untuk mengisi Formulir Survey Feedback melalui tautan atau kode QR yang ditayangkan panitia di layar. Masukan jujur dari kalian sangat berharga untuk evaluasi dan peningkatan kualitas kegiatan kita berikutnya. Kami beri waktu 5 menit untuk pengisian ya!"
+    },
+    {
+      "start": "21.05",
+      "end": "21.10",
+      "duration": "5 menit",
+      "agenda": "Penutupan Day 1",
+      "script": "Tidak terasa kita sudah sampai di penghujung acara Digital System Lab Day 1. Terima kasih sebesar-besarnya kepada narasumber, jajaran panitia, dan seluruh peserta yang luar biasa aktif! Nantikan part 2 dari Digital System Lab yang akan membahas Data Analysis yang pastinya tidak kalah seru! Tunggu kami di rangkaian berikutnya! Saya Rafi pamit undur diri, selamat malam dan sampai jumpa!"
+    }
+  ],
+  "2": [
+    {
+      "start": "18.45",
+      "end": "19.00",
+      "duration": "15 menit",
+      "agenda": "Preparation & Open gate",
+      "script": "Selamat malam teman-teman semua! Selamat datang di Digital System Lab Day 2! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman dan siapkan catatan serta laptop kalian ya, karena malam ini kita bakal bedah topik Data Analysis!"
+    },
+    {
+      "start": "19.00",
+      "end": "19.05",
+      "duration": "5 menit",
+      "agenda": "Opening By MC",
+      "script": "Selamat malam semuanya! Selamat datang di hari kedua Digital System Lab, program kerja Departemen Programme divisi Technology Operations, Young Investor UNPAD. Saya Rafi, dan akan menemani teman-teman selama sesi malam ini. Kalau kemarin kita belajar Web Development, malam ini kita masuk ke topik Data Analysis."
+    },
+    {
+      "start": "19.05",
+      "end": "19.10",
+      "duration": "5 menit",
+      "agenda": "Expectation Setting",
+      "script": "Sebelum masuk ke materi, saya ingin tahu, apa sih harapan teman-teman di sesi hari ini? Saya persilakan [Nama Peserta] untuk menyampaikan harapannya. Silakan nyalakan mic-nya ya. (Setelah peserta menjawab) Terima kasih, [Nama Peserta]! Semoga harapannya tercapai malam ini. Kalau begitu, tanpa menunggu lama, saya persilakan [Sapaan] [Nama Narsum] untuk memaparkan materinya. Waktu dan layar kami serahkan kepada Anda."
+    },
+    {
+      "start": "19.10",
+      "end": "20.10",
+      "duration": "60 menit",
+      "agenda": "Materi dari narasumber",
+      "script": "Terima kasih. Kita lanjut ke sesi utama, yaitu pemaparan materi Data Analysis. Kepada [Nama Narasumber], waktu dan layar kami persilakan."
+    },
+    {
+      "start": "20.10",
+      "end": "20.20",
+      "duration": "10 menit",
+      "agenda": "QnA",
+      "script": "Terima kasih kepada [Nama Narasumber] atas materi yang sangat bermanfaat. Selanjutnya kita masuk ke sesi tanya jawab. Bagi teman-teman yang ingin bertanya, silakan gunakan fitur raise hand atau kirim pertanyaan melalui [Media Tanya Jawab]."
+    },
+    {
+      "start": "20.20",
+      "end": "20.50",
+      "duration": "30 menit",
+      "agenda": "Simulasi (Study Case Data)",
+      "script": "Berikutnya adalah sesi Simulasi Studi Kasus Data & Praktikum. Silakan teman-teman mengakses [Tautan/Platform Studi Kasus] dan mengerjakan sesuai arahan panitia. Pastikan hasil simulasi dapat diselesaikan tepat waktu."
+    },
+    {
+      "start": "20.50",
+      "end": "20.53",
+      "duration": "3 menit",
+      "agenda": "Pemberian sertifikat",
+      "script": "Kita lanjutkan dengan pemberian sertifikat kepada narasumber sebagai bentuk apresiasi atas kontribusi dan ilmu yang telah dibagikan. Kepada [Nama Pemberi Sertifikat] dan [Nama Narasumber], dipersilakan."
+    },
+    {
+      "start": "20.53",
+      "end": "20.55",
+      "duration": "2 menit",
+      "agenda": "Dokumentasi",
+      "script": "Selanjutnya, kita akan melakukan dokumentasi bersama. Silakan teman-teman mengikuti arahan panitia dan menyalakan kamera jika memungkinkan. Kita tunggu sampai dokumentasi selesai."
+    },
+    {
+      "start": "20.55",
+      "end": "21.00",
+      "duration": "5 menit",
+      "agenda": "Survey feedback",
+      "script": "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui [Tautan Survey]. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terkirim."
+    },
+    {
+      "start": "21.00",
+      "end": "21.05",
+      "duration": "5 menit",
+      "agenda": "Penutupan",
+      "script": "Teman-teman, sampailah kita di penghujung seluruh rangkaian Digital System Lab 2026. Terima kasih kepada narasumber, panitia, dan seluruh peserta yang telah berpartisipasi. Semoga ilmu yang didapat bermanfaat. Saya Rafi pamit undur diri. Selamat malam!"
+    }
+  ]
+}
