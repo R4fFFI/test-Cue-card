@@ -13,22 +13,28 @@
                 extend: {
                     colors: {
                         studio: {
-                            bg: '#0B0D12',
-                            card: '#121620',
-                            border: '#222938',
-                            hover: '#1A2130',
-                            input: '#090B0F'
+                            bg: '#090B0F',
+                            surface: '#10141D',
+                            card: '#141A26',
+                            border: '#222A3A',
+                            hover: '#1B2333',
+                            input: '#0C0E14'
                         },
                         tungsten: {
                             DEFAULT: '#F59E0B',
                             tint: 'rgba(245, 158, 11, 0.14)',
                             border: 'rgba(245, 158, 11, 0.35)',
                         },
-                        emerald: {
-                            studio: '#10B981',
+                        velvet: {
+                            crimson: '#F87171',
+                            coral: '#FECACA',
+                            bg: 'rgba(239, 68, 68, 0.12)',
+                            border: 'rgba(239, 68, 68, 0.3)',
                         },
-                        crimson: {
-                            studio: '#EF4444',
+                        cyanCue: {
+                            DEFAULT: '#38BDF8',
+                            bg: 'rgba(56, 189, 248, 0.1)',
+                            border: 'rgba(56, 189, 248, 0.3)'
                         }
                     },
                     fontFamily: {
@@ -48,8 +54,8 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0B0D12;
-            color: #F1F5F9;
+            background-color: #090B0F;
+            color: #F8FAFC;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -59,41 +65,57 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Studio Custom Scrollbar */
+        /* Studio Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0B0D12;
+            background: #090B0F;
         }
         ::-webkit-scrollbar-thumb {
-            background: #222938;
+            background: #222A3A;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #333D52;
+            background: #313D54;
         }
 
-        /* High-visibility tungsten bracket tags [...] for MC instruction prompts */
+        /* High-visibility tungsten bracket tags [...] */
         .script-tag {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            background-color: rgba(245, 158, 11, 0.16);
+            background-color: rgba(245, 158, 11, 0.14);
             color: #FBBF24;
             padding: 2px 10px;
             border-radius: 6px;
-            border: 1px solid rgba(245, 158, 11, 0.4);
+            border: 1px solid rgba(245, 158, 11, 0.35);
             font-weight: 700;
             margin: 2px 3px;
-            font-size: 0.9em;
+            font-size: 0.88em;
             letter-spacing: 0.01em;
-            box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.2);
             user-select: text;
         }
 
-        /* Broadcast Live Pulse Effect */
+        /* Stage direction notes (...) in Cyan */
+        .script-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(56, 189, 248, 0.1);
+            color: #7DD3FC;
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            font-style: italic;
+            font-weight: 500;
+            margin: 3px 2px;
+            font-size: 0.88em;
+            user-select: text;
+        }
+
+        /* Live Pulse Effect */
         @keyframes broadcastPulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.35; transform: scale(0.92); }
@@ -108,7 +130,7 @@
             to { transform: translateY(0); opacity: 1; }
         }
         .toast-animate {
-            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         button:focus-visible, input:focus-visible, textarea:focus-visible {
@@ -120,13 +142,13 @@
 <body class="min-h-screen flex flex-col justify-between overflow-x-hidden antialiased selection:bg-amber-500/30 selection:text-amber-200">
 
     <!-- TOP HEADER / STUDIO MONITORING BAR -->
-    <header class="w-full bg-[#0B0D12]/95 backdrop-blur-md border-b border-[#222938] sticky top-0 z-30 shadow-2xl">
+    <header class="w-full bg-[#090B0F]/95 backdrop-blur-md border-b border-[#222A3A] sticky top-0 z-30 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
             
-            <!-- Left: Brand & AutoSync / Edit Controls -->
+            <!-- Left: Brand & AutoSync / Cloud Controls -->
             <div class="flex items-center justify-between lg:justify-start gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-[#121620] border border-[#222938] flex items-center justify-center text-amber-500 shadow-inner">
+                    <div class="w-10 h-10 rounded-xl bg-[#141A26] border border-[#222A3A] flex items-center justify-center text-amber-500 shadow-inner">
                         <i class="fa-solid fa-tower-broadcast text-lg"></i>
                     </div>
                     <div>
@@ -140,7 +162,7 @@
                     </div>
                 </div>
 
-                <!-- Sync Mode & Edit Quick Actions -->
+                <!-- Sync Mode & Cloud Hub Quick Actions -->
                 <div class="flex items-center gap-2">
                     <button id="autoSyncBtn" onclick="toggleAutoSync()" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20" title="Tekan (M) untuk Ganti Mode Sync">
                         <span class="relative flex h-2 w-2">
@@ -150,7 +172,12 @@
                         <span id="autoSyncLabel" class="tracking-wide">AUTO SYNC</span>
                     </button>
 
-                    <button onclick="openCurrentEditModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-[#121620] hover:bg-[#1A2130] text-amber-400 border border-amber-500/30 transition shadow" title="Edit Script MC Ini (Shortcut: E)">
+                    <button onclick="openCloudModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-[#141A26] hover:bg-[#1B2333] text-sky-400 border border-sky-500/30 transition shadow" title="Sync Cloud Multi-Device & Export GitHub">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                        <span class="hidden sm:inline">Sync Cloud</span>
+                    </button>
+
+                    <button onclick="openCurrentEditModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-[#141A26] hover:bg-[#1B2333] text-amber-400 border border-amber-500/30 transition shadow" title="Edit Script MC Ini (Shortcut: E)">
                         <i class="fa-solid fa-pen-to-square"></i>
                         <span class="hidden sm:inline">Edit Script</span>
                     </button>
@@ -161,7 +188,7 @@
             <div class="flex flex-wrap sm:flex-nowrap items-stretch justify-end gap-2.5">
                 
                 <!-- 1. Real-Time WIB Clock -->
-                <div class="flex items-center gap-2.5 px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl">
+                <div class="flex items-center gap-2.5 px-3.5 py-2 bg-[#141A26] border border-[#222A3A] rounded-xl">
                     <i class="fa-regular fa-clock text-slate-400 text-sm"></i>
                     <div class="text-right">
                         <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Jam WIB Real-Time</div>
@@ -170,7 +197,7 @@
                 </div>
 
                 <!-- 2. Status Agenda Live Current WIB -->
-                <div class="flex-1 min-w-[170px] max-w-[240px] px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl flex flex-col justify-center">
+                <div class="flex-1 min-w-[170px] max-w-[240px] px-3.5 py-2 bg-[#141A26] border border-[#222A3A] rounded-xl flex flex-col justify-center">
                     <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
                         <span>Rundown WIB Status</span>
                         <span id="liveStatusBadge" class="text-[9px] font-bold text-emerald-400">Aktif</span>
@@ -178,27 +205,27 @@
                     <div id="realTimeAgendaTitle" class="font-semibold text-xs sm:text-sm text-slate-200 truncate mt-0.5">Memuat jadwal...</div>
                 </div>
 
-                <!-- 3. Countdown To Next Agenda -->
-                <div id="countdownBox" class="flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl flex flex-col justify-center transition-colors">
+                <!-- 3. Countdown To Next Agenda (Soft Velvet Crimson Warning) -->
+                <div id="countdownBox" class="flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#141A26] border border-[#222A3A] rounded-xl flex flex-col justify-center transition-colors">
                     <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
-                        <span>Menuju Agenda Berikutnya</span>
+                        <span>Menuju Agenda Next</span>
                         <span id="nextCountdown" class="tabular-numbers font-bold text-amber-400 text-xs sm:text-sm">00m 00s</span>
                     </div>
                     <div id="nextAgendaTitle" class="font-medium text-xs text-slate-300 truncate mt-0.5">Selanjutnya: -</div>
                 </div>
 
                 <!-- Font Size & Screen Actions -->
-                <div class="flex items-center gap-1 border-l border-[#222938] pl-2">
-                    <button onclick="changeFontSize(-2)" class="w-8 h-8 rounded-lg bg-[#121620] border border-[#222938] hover:bg-[#1A2130] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition" title="Kecilkan Teks">
+                <div class="flex items-center gap-1 border-l border-[#222A3A] pl-2">
+                    <button onclick="changeFontSize(-2)" class="w-8 h-8 rounded-lg bg-[#141A26] border border-[#222A3A] hover:bg-[#1B2333] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition" title="Kecilkan Teks">
                         A-
                     </button>
-                    <button onclick="resetFontSize()" class="w-8 h-8 rounded-lg bg-[#121620] border border-[#222938] hover:bg-[#1A2130] text-slate-400 hover:text-white flex items-center justify-center text-[10px] font-mono transition" title="Reset Ukuran Teks">
+                    <button onclick="resetFontSize()" class="w-8 h-8 rounded-lg bg-[#141A26] border border-[#222A3A] hover:bg-[#1B2333] text-slate-400 hover:text-white flex items-center justify-center text-[10px] font-mono transition" title="Reset Ukuran Teks">
                         100%
                     </button>
-                    <button onclick="changeFontSize(2)" class="w-8 h-8 rounded-lg bg-[#121620] border border-[#222938] hover:bg-[#1A2130] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition" title="Besarkan Teks">
+                    <button onclick="changeFontSize(2)" class="w-8 h-8 rounded-lg bg-[#141A26] border border-[#222A3A] hover:bg-[#1B2333] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition" title="Besarkan Teks">
                         A+
                     </button>
-                    <button onclick="toggleFullScreen()" class="w-8 h-8 rounded-lg bg-[#121620] border border-[#222938] hover:bg-[#1A2130] text-slate-300 hover:text-white flex items-center justify-center text-xs transition" title="Layar Penuh (F)">
+                    <button onclick="toggleFullScreen()" class="w-8 h-8 rounded-lg bg-[#141A26] border border-[#222A3A] hover:bg-[#1B2333] text-slate-300 hover:text-white flex items-center justify-center text-xs transition" title="Layar Penuh (F)">
                         <i class="fa-solid fa-expand"></i>
                     </button>
                 </div>
@@ -212,24 +239,24 @@
     <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 flex flex-col justify-center relative my-auto" id="touchArea">
 
         <!-- Left / Right Side Floating Controls (Desktop) -->
-        <button onclick="prevAgenda()" class="hidden md:flex absolute -left-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-xl bg-[#121620] border border-[#222938] text-slate-300 hover:text-white hover:bg-[#1A2130] hover:border-amber-500/50 items-center justify-center transition shadow-2xl group" title="Agenda Sebelumnya (Panah Kiri / K)">
+        <button onclick="prevAgenda()" class="hidden md:flex absolute -left-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-xl bg-[#141A26] border border-[#222A3A] text-slate-300 hover:text-white hover:bg-[#1B2333] hover:border-amber-500/50 items-center justify-center transition shadow-2xl group" title="Agenda Sebelumnya (Panah Kiri / K)">
             <i class="fa-solid fa-chevron-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
         </button>
 
-        <button onclick="nextAgenda()" class="hidden md:flex absolute -right-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-xl bg-[#121620] border border-[#222938] text-slate-300 hover:text-white hover:bg-[#1A2130] hover:border-amber-500/50 items-center justify-center transition shadow-2xl group" title="Agenda Selanjutnya (Panah Kanan / J / Space)">
+        <button onclick="nextAgenda()" class="hidden md:flex absolute -right-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-xl bg-[#141A26] border border-[#222A3A] text-slate-300 hover:text-white hover:bg-[#1B2333] hover:border-amber-500/50 items-center justify-center transition shadow-2xl group" title="Agenda Selanjutnya (Panah Kanan / J / Space)">
             <i class="fa-solid fa-chevron-right text-sm group-hover:translate-x-0.5 transition-transform"></i>
         </button>
 
         <!-- Main Cue Card Surface -->
-        <div class="bg-[#121620] border border-[#222938] rounded-2xl shadow-2xl p-6 sm:p-9 flex flex-col min-h-[440px] sm:min-h-[490px] justify-between relative overflow-hidden">
+        <div class="bg-[#141A26] border border-[#222A3A] rounded-2xl shadow-2xl p-6 sm:p-9 flex flex-col min-h-[440px] sm:min-h-[490px] justify-between relative overflow-hidden">
             
             <!-- Card Header: Day & Duration info -->
-            <div class="flex items-center justify-between pb-4 border-b border-[#222938] gap-4">
+            <div class="flex items-center justify-between pb-4 border-b border-[#222A3A] gap-4">
                 <div class="flex items-center gap-3">
                     <span id="cardDayBadge" class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
                         Day 1 (Web Dev)
                     </span>
-                    <span id="cardTimeRange" class="tabular-numbers px-3 py-1 rounded-lg text-xs font-medium bg-[#0B0D12] text-slate-300 border border-[#222938]">
+                    <span id="cardTimeRange" class="tabular-numbers px-3 py-1 rounded-lg text-xs font-medium bg-[#090B0F] text-slate-300 border border-[#222A3A]">
                         18.45 - 19.00 (15 mnt)
                     </span>
                 </div>
@@ -243,8 +270,8 @@
                 <!-- Keyboard shortcuts indicator -->
                 <div class="hidden md:flex items-center gap-2 text-xs text-slate-400">
                     <span>Pindah Agenda:</span>
-                    <kbd class="px-2 py-0.5 bg-[#0B0D12] border border-[#222938] rounded text-slate-300 font-mono text-[11px]">← Prev</kbd>
-                    <kbd class="px-2 py-0.5 bg-[#0B0D12] border border-[#222938] rounded text-slate-300 font-mono text-[11px]">Next → / Space</kbd>
+                    <kbd class="px-2 py-0.5 bg-[#090B0F] border border-[#222A3A] rounded text-slate-300 font-mono text-[11px]">← Prev</kbd>
+                    <kbd class="px-2 py-0.5 bg-[#090B0F] border border-[#222A3A] rounded text-slate-300 font-mono text-[11px]">Next → / Space</kbd>
                 </div>
             </div>
 
@@ -256,7 +283,7 @@
                         Preparation & Open gate
                     </h2>
                 </div>
-                <button onclick="openCurrentEditModal()" class="px-3 py-1.5 rounded-lg bg-[#0B0D12] hover:bg-[#1A2130] text-amber-400 border border-amber-500/30 text-xs font-medium flex items-center gap-1.5 transition shrink-0" title="Edit Agenda Ini">
+                <button onclick="openCurrentEditModal()" class="px-3 py-1.5 rounded-lg bg-[#090B0F] hover:bg-[#1B2333] text-amber-400 border border-amber-500/30 text-xs font-medium flex items-center gap-1.5 transition shrink-0" title="Edit Agenda Ini">
                     <i class="fa-solid fa-pen"></i> Edit Teks
                 </button>
             </div>
@@ -269,14 +296,14 @@
             </div>
 
             <!-- Card Bottom Action Toolbar -->
-            <div class="pt-4 border-t border-[#222938] flex items-center justify-between gap-3">
+            <div class="pt-4 border-t border-[#222A3A] flex items-center justify-between gap-3">
                 
-                <button onclick="prevAgenda()" class="px-4 py-2 bg-[#0B0D12] hover:bg-[#1A2130] text-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 border border-[#222938] transition md:hidden">
+                <button onclick="prevAgenda()" class="px-4 py-2 bg-[#090B0F] hover:bg-[#1B2333] text-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 border border-[#222A3A] transition md:hidden">
                     <i class="fa-solid fa-arrow-left"></i> Prev
                 </button>
 
                 <div class="flex items-center gap-2">
-                    <button onclick="openAgendaModal()" class="px-4 py-2 bg-[#0B0D12] hover:bg-[#1A2130] border border-[#222938] hover:border-amber-500/40 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition" title="Lihat & Kelola Rundown (R)">
+                    <button onclick="openAgendaModal()" class="px-4 py-2 bg-[#090B0F] hover:bg-[#1B2333] border border-[#222A3A] hover:border-amber-500/40 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition" title="Lihat & Kelola Rundown (R)">
                         <i class="fa-solid fa-list-ul text-amber-500"></i>
                         <span>Kelola Rundown</span>
                     </button>
@@ -292,17 +319,17 @@
     </main>
 
     <!-- FOOTER CONTROLS & STATUS INDICATORS (Day Selector & Current Agenda Counter) -->
-    <footer class="w-full bg-[#0B0D12] border-t border-[#222938] px-4 py-3.5 z-30">
+    <footer class="w-full bg-[#090B0F] border-t border-[#222A3A] px-4 py-3.5 z-30">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             
             <!-- KIRI BAWAH: TOGGLE DAY 1 VS DAY 2 -->
             <div class="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Pilih Hari:</span>
-                <div class="bg-[#121620] p-1 rounded-xl border border-[#222938] flex gap-1">
+                <div class="bg-[#141A26] p-1 rounded-xl border border-[#222A3A] flex gap-1">
                     <button id="day1Btn" onclick="switchDay(1)" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow">
                         Day 1 (Web Dev)
                     </button>
-                    <button id="day2Btn" onclick="switchDay(2)" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1A2130]">
+                    <button id="day2Btn" onclick="switchDay(2)" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1B2333]">
                         Day 2 (Data Analysis)
                     </button>
                 </div>
@@ -310,7 +337,7 @@
 
             <!-- KANAN BAWAH: INDIKATOR AGENDA AKTIF -->
             <div class="flex items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
-                <div class="bg-[#121620] px-4 py-2 rounded-xl border border-[#222938] text-xs text-slate-300 flex items-center gap-2.5">
+                <div class="bg-[#141A26] px-4 py-2 rounded-xl border border-[#222A3A] text-xs text-slate-300 flex items-center gap-2.5">
                     <span class="tabular-numbers text-amber-400 font-bold" id="currentAgendaIndexText">Agenda 01/11</span>
                     <span class="text-slate-600">•</span>
                     <span class="font-medium text-slate-200 truncate max-w-[200px] sm:max-w-[300px]" id="currentScriptAgendaName">
@@ -322,12 +349,101 @@
         </div>
     </footer>
 
-    <!-- MODAL 1: RUNDOWN LIST & ALL AGENDA MANAGEMENT -->
-    <div id="agendaModal" class="fixed inset-0 z-50 bg-[#0B0D12]/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="bg-[#121620] border border-[#222938] rounded-2xl w-full max-w-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+    <!-- MODAL 1: CLOUD MULTI-DEVICE SYNC & GITHUB PAGES EXPORT -->
+    <div id="cloudModal" class="fixed inset-0 z-50 bg-[#090B0F]/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#141A26] border border-[#222A3A] rounded-2xl w-full max-w-2xl flex flex-col shadow-2xl overflow-hidden max-h-[90vh]">
+            
+            <div class="p-4 border-b border-[#222A3A] flex items-center justify-between bg-[#090B0F]">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i>
+                    <h3 class="font-bold text-slate-100 text-sm sm:text-base">Sinkronisasi Script Multi-Device & GitHub</h3>
+                </div>
+                <button onclick="closeCloudModal()" class="w-8 h-8 rounded-lg bg-[#141A26] text-slate-400 hover:text-white flex items-center justify-center border border-[#222A3A]">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto space-y-5 text-xs text-slate-300">
+                
+                <!-- Option A: GitHub Pages Commit Export -->
+                <div class="p-4 rounded-xl bg-[#090B0F] border border-[#222A3A] space-y-2.5">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                        <i class="fa-brands fa-github"></i>
+                        <span>Opsi 1: Direct File Export `dsl_schedule.json` (Untuk GitHub Pages)</span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed">
+                        Unduh file data JSON terbaru lalu simpan/commit sebagai <code class="text-amber-300 bg-[#141A26] px-1 py-0.5 rounded">dsl_schedule.json</code> di dalam folder utama repositori GitHub Anda. 
+                        <strong>Semua device yang membuka link GitHub Pages Anda akan otomatis mengunduh script terbaru!</strong>
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="exportJSONFile()" class="px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold flex items-center gap-2 transition">
+                            <i class="fa-solid fa-download"></i> Download dsl_schedule.json
+                        </button>
+                        <button onclick="copyRawJSON()" class="px-3.5 py-2 rounded-xl bg-[#141A26] hover:bg-[#1B2333] text-slate-200 border border-[#222A3A] font-semibold flex items-center gap-2 transition">
+                            <i class="fa-solid fa-copy"></i> Copy Raw JSON
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option B: GitHub Gist Live API Cloud Sync -->
+                <div class="p-4 rounded-xl bg-[#090B0F] border border-[#222A3A] space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-sky-400 font-bold text-sm">
+                            <i class="fa-solid fa-network-wired"></i>
+                            <span>Opsi 2: Live Cloud Sync via GitHub Gist</span>
+                        </div>
+                        <span class="text-[10px] bg-sky-500/10 text-sky-300 border border-sky-500/20 px-2 py-0.5 rounded font-mono">Real-time API</span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed">
+                        Masukkan Gist ID publik atau rahasia yang berisi script ini. Anda dapat mengunduh script langsung ke device apa pun tanpa commit manual.
+                    </p>
+                    
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">GitHub Gist ID</label>
+                            <input type="text" id="gistIdInput" placeholder="Contoh: a1b2c3d4e5f67890..." class="w-full bg-[#141A26] border border-[#222A3A] rounded-xl px-3 py-2 text-xs text-slate-100 font-mono focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">GitHub Personal Token (Opsional - khusus jika ingin Push dari HP/Laptop)</label>
+                            <input type="password" id="gistTokenInput" placeholder="ghp_xxxxxxxxxxxx" class="w-full bg-[#141A26] border border-[#222A3A] rounded-xl px-3 py-2 text-xs text-slate-100 font-mono focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="fetchFromGist()" class="px-3.5 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 font-bold flex items-center gap-2 transition">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> Ambil / Tarik Script Cloud
+                        </button>
+                        <button onclick="pushToGist()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold flex items-center gap-2 transition">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Ke Cloud Gist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option C: Manual Import JSON -->
+                <div class="p-4 rounded-xl bg-[#090B0F] border border-[#222A3A] space-y-2">
+                    <label class="block text-xs font-bold text-slate-300">Opsi 3: Paste / Import JSON Data Manual</label>
+                    <textarea id="importJsonArea" rows="3" placeholder="Paste data JSON script di sini..." class="w-full bg-[#141A26] border border-[#222A3A] rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:border-amber-500"></textarea>
+                    <button onclick="importJSONData()" class="px-3.5 py-1.5 rounded-xl bg-[#141A26] hover:bg-[#1B2333] text-slate-200 border border-[#222A3A] font-semibold text-xs flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-file-import text-amber-400"></i> Import Manual Data
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="p-3.5 border-t border-[#222A3A] bg-[#090B0F] flex justify-end">
+                <button onclick="closeCloudModal()" class="px-4 py-1.5 bg-[#141A26] hover:bg-[#1B2333] text-slate-300 text-xs font-semibold rounded-xl border border-[#222A3A]">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: RUNDOWN LIST & ALL AGENDA MANAGEMENT -->
+    <div id="agendaModal" class="fixed inset-0 z-50 bg-[#090B0F]/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#141A26] border border-[#222A3A] rounded-2xl w-full max-w-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
             
             <!-- Modal Header -->
-            <div class="p-4 border-b border-[#222938] flex items-center justify-between bg-[#0B0D12]">
+            <div class="p-4 border-b border-[#222A3A] flex items-center justify-between bg-[#090B0F]">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-list-check text-amber-500"></i>
                     <h3 class="font-bold text-slate-100 text-sm sm:text-base">Daftar & Kelola Rundown (<span id="modalDayTitle">Day 1</span>)</h3>
@@ -336,7 +452,7 @@
                     <button onclick="addNewAgenda()" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fa-solid fa-plus"></i> Tambah Agenda
                     </button>
-                    <button onclick="closeAgendaModal()" class="w-8 h-8 rounded-lg bg-[#121620] text-slate-400 hover:text-white flex items-center justify-center border border-[#222938]">
+                    <button onclick="closeAgendaModal()" class="w-8 h-8 rounded-lg bg-[#141A26] text-slate-400 hover:text-white flex items-center justify-center border border-[#222A3A]">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -348,28 +464,28 @@
             </div>
 
             <!-- Modal Footer Actions -->
-            <div class="p-3.5 border-t border-[#222938] bg-[#0B0D12] flex flex-wrap items-center justify-between gap-3">
-                <button onclick="confirmResetDefault()" class="px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+            <div class="p-3.5 border-t border-[#222A3A] bg-[#090B0F] flex flex-wrap items-center justify-between gap-3">
+                <button onclick="confirmResetDefault()" class="px-3.5 py-1.5 bg-velvet-bg hover:bg-red-500/20 text-velvet-crimson border border-velvet-border rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-rotate-left"></i> Reset Ke Script Asli
                 </button>
-                <button onclick="closeAgendaModal()" class="px-4 py-1.5 bg-[#121620] hover:bg-[#1A2130] text-slate-300 text-xs font-semibold rounded-xl border border-[#222938]">
+                <button onclick="closeAgendaModal()" class="px-4 py-1.5 bg-[#141A26] hover:bg-[#1B2333] text-slate-300 text-xs font-semibold rounded-xl border border-[#222A3A]">
                     Tutup
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 2: EDIT SINGLE AGENDA / SCRIPT FORM -->
-    <div id="editAgendaModal" class="fixed inset-0 z-50 bg-[#0B0D12]/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="bg-[#121620] border border-[#222938] rounded-2xl w-full max-w-2xl flex flex-col shadow-2xl overflow-hidden max-h-[90vh]">
+    <!-- MODAL 3: EDIT SINGLE AGENDA / SCRIPT FORM -->
+    <div id="editAgendaModal" class="fixed inset-0 z-50 bg-[#090B0F]/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#141A26] border border-[#222A3A] rounded-2xl w-full max-w-2xl flex flex-col shadow-2xl overflow-hidden max-h-[90vh]">
             
             <!-- Modal Header -->
-            <div class="p-4 border-b border-[#222938] flex items-center justify-between bg-[#0B0D12]">
+            <div class="p-4 border-b border-[#222A3A] flex items-center justify-between bg-[#090B0F]">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-pen-to-square text-amber-500"></i>
                     <h3 class="font-bold text-slate-100 text-sm sm:text-base" id="editModalHeaderTitle">Edit Script & Agenda MC</h3>
                 </div>
-                <button onclick="closeEditModal()" class="w-8 h-8 rounded-lg bg-[#121620] text-slate-400 hover:text-white flex items-center justify-center border border-[#222938]">
+                <button onclick="closeEditModal()" class="w-8 h-8 rounded-lg bg-[#141A26] text-slate-400 hover:text-white flex items-center justify-center border border-[#222A3A]">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -382,36 +498,36 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Jam Start (WIB)</label>
-                        <input type="text" id="editStart" required placeholder="18.45" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                        <input type="text" id="editStart" required placeholder="18.45" class="w-full bg-[#0C0E14] border border-[#222A3A] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Jam End (WIB)</label>
-                        <input type="text" id="editEnd" required placeholder="19.00" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                        <input type="text" id="editEnd" required placeholder="19.00" class="w-full bg-[#0C0E14] border border-[#222A3A] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Durasi</label>
-                        <input type="text" id="editDuration" required placeholder="15 menit" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                        <input type="text" id="editDuration" required placeholder="15 menit" class="w-full bg-[#0C0E14] border border-[#222A3A] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
                     </div>
                 </div>
 
                 <!-- Agenda Title input -->
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Judul Agenda</label>
-                    <input type="text" id="editTitle" required placeholder="Preparation & Open gate" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-100 focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                    <input type="text" id="editTitle" required placeholder="Preparation & Open gate" class="w-full bg-[#0C0E14] border border-[#222A3A] rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-100 focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
                 </div>
 
                 <!-- MC Script Textarea -->
                 <div>
-                    <div class="flex items-center justify-between mb-1">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-1 gap-1">
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Teks Script MC Prompt</label>
-                        <span class="text-[11px] text-amber-400 font-medium">Gunakan <code class="bg-[#090B0F] px-1 rounded text-amber-300">[Tag Nama]</code> untuk penanda otomatis</span>
+                        <span class="text-[11px] text-amber-400 font-medium">Gunakan <code class="bg-[#0C0E14] px-1 rounded text-amber-300">[Tag Nama]</code> dan <code class="bg-[#0C0E14] px-1 rounded text-sky-300">(Catatan MC)</code></span>
                     </div>
-                    <textarea id="editScript" rows="7" required placeholder="Tuliskan teks script MC di sini..." class="w-full bg-[#090B0F] border border-[#222938] rounded-xl p-3.5 text-sm text-slate-100 leading-relaxed focus:border-amber-500 focus:ring-1 focus:ring-amber-500 font-sans"></textarea>
+                    <textarea id="editScript" rows="7" required placeholder="Tuliskan teks script MC di sini..." class="w-full bg-[#0C0E14] border border-[#222A3A] rounded-xl p-3.5 text-sm text-slate-100 leading-relaxed focus:border-amber-500 focus:ring-1 focus:ring-amber-500 font-sans"></textarea>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="pt-2 flex items-center justify-end gap-3 border-t border-[#222938]">
-                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-[#0B0D12] hover:bg-[#1A2130] text-slate-300 text-xs font-semibold rounded-xl border border-[#222938]">
+                <div class="pt-2 flex items-center justify-end gap-3 border-t border-[#222A3A]">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-[#090B0F] hover:bg-[#1B2333] text-slate-300 text-xs font-semibold rounded-xl border border-[#222A3A]">
                         Batal
                     </button>
                     <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20">
@@ -422,10 +538,10 @@
         </div>
     </div>
 
-    <!-- MODAL 3: CONFIRMATION MODAL (NO ALERT/CONFIRM) -->
-    <div id="confirmModal" class="fixed inset-0 z-50 bg-[#0B0D12]/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="bg-[#121620] border border-[#222938] rounded-2xl w-full max-w-md p-5 shadow-2xl text-center space-y-4">
-            <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30 flex items-center justify-center mx-auto text-xl">
+    <!-- MODAL 4: CONFIRMATION MODAL (NO ALERT/CONFIRM) -->
+    <div id="confirmModal" class="fixed inset-0 z-50 bg-[#090B0F]/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#141A26] border border-[#222A3A] rounded-2xl w-full max-w-md p-5 shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 rounded-full bg-velvet-bg text-velvet-crimson border border-velvet-border flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <div>
@@ -433,10 +549,10 @@
                 <p class="text-xs text-slate-400 mt-1" id="confirmDesc">Semua perubahan script yang telah Anda edit di Day 1 & Day 2 akan dikembalikan ke draf bawaan panitia.</p>
             </div>
             <div class="flex items-center justify-center gap-3 pt-2">
-                <button id="confirmCancelBtn" class="px-4 py-2 bg-[#0B0D12] hover:bg-[#1A2130] text-slate-300 text-xs font-semibold rounded-xl border border-[#222938]">
+                <button id="confirmCancelBtn" class="px-4 py-2 bg-[#090B0F] hover:bg-[#1B2333] text-slate-300 text-xs font-semibold rounded-xl border border-[#222A3A]">
                     Batal
                 </button>
-                <button id="confirmOkBtn" class="px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-xl shadow">
+                <button id="confirmOkBtn" class="px-4 py-2 bg-velvet-crimson hover:bg-red-400 text-slate-950 font-bold text-xs rounded-xl shadow">
                     Ya, Reset
                 </button>
             </div>
@@ -449,159 +565,166 @@
         <span id="toastMessage">Perubahan berhasil disimpan!</span>
     </div>
 
-    <!-- JAVASCRIPT BROADCAST LOGIC & LOCALSTORAGE EDIT ENGINE -->
+    <!-- JAVASCRIPT BROADCAST ENGINE & SYNC CONTROLLER -->
     <script>
-        // ORIGINAL DEFAULT PANITIA SCHEDULE DATA
+        // UPDATED DEFAULT PANITIA SCHEDULE DATA (DAY 1 FROM PDF + DAY 2)
         const DEFAULT_SCHEDULE_DATA = {
             1: [
                 {
                     start: "18.45",
                     end: "19.00",
-                    duration: "15 mnt",
+                    duration: "15 menit",
                     agenda: "Preparation & Open gate",
-                    script: "Halo teman-teman semua! Selamat datang di Google Meet Digital System Lab Day 1! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman kalian ya. Boleh disiapin juga catatan, karena malam ini kita bakal bedah topik yang super seru seputar Web Development & Pemanfaatan AI dalam Pengembangan Website!"
+                    script: "Selamat malam teman-teman semua! Sambil menunggu rekan-rekan yang lain bergabung, silakan persiapkan posisi terbaik dan paling nyaman ya. Boleh disiapin laptop atau PC kalian juga alat catatannya, karena malam ini kita bakal bedah topik yang super seru seputar Web Development! (Catatan: MC menyapa peserta & koordinasi dengan panitia)"
                 },
                 {
                     start: "19.00",
                     end: "19.02",
-                    duration: "2 mnt",
+                    duration: "2 menit",
                     agenda: "Opening By MC",
-                    script: "Selamat malam semuanya! Yang terhormat para Project Supervisors, Project Officer, panitia yang bertugas, serta seluruh peserta Digital System Lab yang luar biasa antusias malam ini! Kenalin, aku Rafboy dari divisi Technology Operations Young Investor UNPAD, yang bakal menemani teman-teman selama sesi malam ini. Di hari pertama ini, kita akan masuk ke topik Web Development. Terima kasih banyak buat teman-teman yang sudah meluangkan waktunya di tengah kesibukan!"
+                    script: "Selamat malam semuanya! Yang terhormat narasumber kami hari ini, panitia yang bertugas, serta seluruh peserta Digital System Lab yang antusias sekali malam ini! Kenalin, aku Rafi dari divisi Technology Operations Young Investor UNPAD, yang bakal menemani teman-teman selama acara Digital System Lab part satu! Di hari pertama ini, kita bakal mengangkat topik utama yaitu Web Development dan Pemanfaatan AI dalam Pengembangan Website."
                 },
                 {
                     start: "19.02",
                     end: "19.05",
-                    duration: "3 mnt",
+                    duration: "3 menit",
                     agenda: "Pemaparan Profil Narsum",
-                    script: "Nah, biar makin afdal dan kenal dengan sosok luar biasa yang bakal membagikan ilmunya malam ini, yuk kita tengok profil narasumber hebat kita di layar! Pemateri kita kali ini punya segudang pengalaman keren di bidang Web Development. Mantap banget kan? Pasti udah gak sabar buat menimba ilmu langsung dari ahlinya!"
+                    script: "Nah, biar makin afdal dan kenal dengan sosok luar biasa yang bakal membagikan ilmunya malam ini, yuk kita simak bersama profil narasumber hebat kita di layar! (Pembacaan Ringkasan CV/Portofolio Narasumber oleh MC) Luar biasa banget kan rekam jejak beliau? Pasti udah gak sabar buat menimba ilmu langsung dari ahlinya!"
                 },
                 {
                     start: "19.05",
                     end: "19.10",
-                    duration: "5 mnt",
+                    duration: "5 menit",
                     agenda: "Expectation Setting",
-                    script: "Sebelum materi dimulai, aku pengen denger dong dari kalian. Coba aku tunjuk satu orang ya... [Sebut nama peserta], boleh unmute mic atau tulis di kolom chat, apa nih ekspektasi kamu buat sesi Web Development malam ini? ... Keren banget! Semoga seluruh ekspektasi itu terjawab tuntas malam ini ya. Tanpa nunggu lama lagi, yuk langsung aja kita masuk ke sesi materi!"
+                    script: "Sebelum kita masuk ke materi inti, dalam sesi kali ini kami berharap teman-teman sekalian (baca poin-poin di backdrop). Kiranya berikut yang kami ekspektasikan dari teman-teman sekalian, aku juga mau dengar dari kalian, boleh sampaikan harapan atau ekspektasi yang ingin didapatkan dari sesi Web Development malam ini di kolom komentar! (Membaca respon peserta dengan antusias) Keren banget harapannya! Semoga seluruh poin ekspektasi tadi bisa terjawab tuntas malam ini ya. Tanpa berlama-lama lagi, mari kita masuk ke sesi pemaparan materi. Bagi teman-teman sekalian mohon mengikuti materi dengan seksama karna kita akan mencoba langsung membuat website! Baik, kepada [Sapaan/Nama Narsum Kak Fachri], waktu dan tempat kami persilakan."
                 },
                 {
                     start: "19.10",
                     end: "20.10",
-                    duration: "60 mnt",
+                    duration: "60 menit",
                     agenda: "Materi dari Narsum",
-                    script: "Kepada [Sebut nama narsum], waktu dan layar aku persilakan!”"
+                    script: "Kepada Kak Fachri, waktu dan tempat kami persilakan."
                 },
                 {
                     start: "20.10",
-                    end: "20.25",
-                    duration: "15 mnt",
-                    agenda: "QnA",
-                    script: "Wah, dapet ilmu daging banget ya dari narasumber kita! Sekarang giliran kalian yang beraksi. Buat yang punya pertanyaan, langsung aja tekan tombol raise hand buat unmute, atau ketik pertanyaan kalian di kolom chat ya!”"
+                    end: "20.30",
+                    duration: "20 menit",
+                    agenda: "Simulasi Website",
+                    script: "(Wah sangat jelas dan bisa diikuti arahan membuat website dari Kak Fachri! Pasti dari teman-teman sekalian ada yang sudah sampai langkah ke-6. Bisa dilanjutkan dengan latihan berikut: dipilih maksimal 3 fitur dari 4 latihan yang diberikan Kak Fachri. Kita kasih waktu 20 menit, selamat menyempurnakan websitenya karna setelah ini teman-teman sekalian mempresentasikan hasil terbaiknya! Remind waktu: 10 menit & 5 menit. Waktunya habis, setelah ini akan masuk sesi presentasi partisipan)."
                 },
                 {
-                    start: "20.25",
+                    start: "20.30",
+                    end: "20.40",
+                    duration: "10 menit",
+                    agenda: "Presentasi",
+                    script: "(Waktu habis! Ini yang paling dinanti, ingin lihat progress yang sudah terbukti dari partisipan. Sekarang saatnya teman-teman buat memaparkan hasilnya, ajak buat yang mau volunteer presentasiin)."
+                },
+                {
+                    start: "20.40",
                     end: "20.55",
-                    duration: "30 mnt",
-                    agenda: "Post Test (Simulasi bikin website)",
-                    script: "Nah, biar tau seberapa jago pemahaman kita malam ini, yuk kita lanjut ke sesi Post Test & Simulasi Pembuatan Website! Link-nya udah dibagikan teman-teman panitia di kolom chat. Waktu kalian 30 menit, selamat mengerjakan dan lakukan yang terbaik!"
+                    duration: "15 menit",
+                    agenda: "QnA",
+                    script: "Wah, (apresiasi semua partisipan dari simulasinya) dan wawasan yang betul-betul daging dan insightful banget ya seputar Web Development! Terima kasih banyak Kak Fachri. Sekarang saatnya giliran teman-teman peserta yang beraksi. Bagi yang memiliki pertanyaan atau ingin berdiskusi langsung, silakan gunakan fitur Raise Hand untuk unmute, atau ketik pertanyaan kalian melalui kolom chat dengan format nama dan pertanyaan. Yuk, mumpung ada ahlinya langsung di sini!"
                 },
                 {
                     start: "20.55",
                     end: "20.58",
-                    duration: "3 mnt",
+                    duration: "3 menit",
                     agenda: "Pemberian Sertifikat",
-                    script: "Luar biasa banget antusiasme simulasinya! Sebagai bentuk apresiasi dan rasa terima kasih, aku mewakili panitia mau menyerahkan sertifikat secara simbolis kepada [Sebut nama narsum]. Makasih banyak ya atas ilmu dan waktunya malam ini!”"
+                    script: "Applause dulu dong buat semangat teman-teman dalam menyelesaikan simulasinya! Luar biasa! Sebagai bentuk apresiasi dan rasa terima kasih yang setinggi-tingginya dari panitia Young Investor UNPAD, kami ingin menyerahkan sertifikat secara simbolis kepada narasumber hebat kita, Kak Fachri. (Procure menayangkan backdrop sertifikat) Terima kasih banyak [Sapaan/Nama Narsum Kak Fachri] atas pemaparan ilmu dan bimbingannya yang sangat bermanfaat malam ini!"
                 },
                 {
                     start: "20.58",
                     end: "21.00",
-                    duration: "2 mnt",
+                    duration: "2 menit",
                     agenda: "Dokumentasi",
-                    script: "Sebelum narasumber kita pamit, yuk teman-teman buka kameranya sebentar biar kita bisa foto bareng! Pasang senyum paling manis ya. Aku hitung: 1... 2... 3... cheers!”"
+                    script: "Sebelum narasumber kita berpamitan, mari kita abadikan momen malam hari ini! Kepada teman-teman peserta, yuk dinyalakan kameranya sebentar dan pasang senyum terbaik kalian. Operator siap? Aku hitung ya: 1... 2... 3... gaya YI 1... 2... 3... Mantap, terima kasih semuanya!"
                 },
                 {
                     start: "21.00",
                     end: "21.05",
-                    duration: "5 mnt",
+                    duration: "5 menit",
                     agenda: "Survey Feedback",
-                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui link yang dibagikan panitia di kolom chat atau QR code di layar. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terisi ya!"
+                    script: "Teman-teman, sebelum kita berpisah, mohon bantuannya untuk mengisi Formulir Survey Feedback melalui tautan atau kode QR yang ditayangkan panitia di layar. Masukan jujur dari kalian sangat berharga untuk evaluasi dan peningkatan kualitas kegiatan kita berikutnya. Kami beri waktu 5 menit untuk pengisian ya!"
                 },
                 {
                     start: "21.05",
                     end: "21.10",
-                    duration: "5 mnt",
-                    agenda: "Penutupan",
-                    script: "Terima kasih banyak buat narasumber dan teman-teman semua yang udah semangat dari awal sampai akhir. Jangan lupa, besok kita masih punya Day 2 dengan topik yang gak kalah seru yaitu Data Analysis! Sampai ketemu besok malam jam 18:45 WIB ya. Saya Rafboy pamit undur diri. Selamat malam!"
+                    duration: "5 menit",
+                    agenda: "Penutupan Day 1",
+                    script: "Tidak terasa kita sudah sampai di penghujung acara Digital System Lab Day 1. Terima kasih sebesar-besarnya kepada narasumber, jajaran panitia, dan seluruh peserta yang luar biasa aktif! Nantikan part 2 dari Digital System Lab yang akan membahas Data Analysis yang pastinya tidak kalah seru! Tunggu kami di rangkaian berikutnya! Saya Rafi pamit undur diri, selamat malam dan sampai jumpa!"
                 }
             ],
             2: [
                 {
                     start: "18.45",
                     end: "19.00",
-                    duration: "15 mnt",
+                    duration: "15 menit",
                     agenda: "Preparation & Open gate",
                     script: "Selamat malam teman-teman semua! Selamat datang di Digital System Lab Day 2! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman dan siapkan catatan serta laptop kalian ya, karena malam ini kita bakal bedah topik Data Analysis!"
                 },
                 {
                     start: "19.00",
                     end: "19.05",
-                    duration: "5 mnt",
+                    duration: "5 menit",
                     agenda: "Opening By MC",
-                    script: "Selamat malam semuanya! Selamat datang di hari kedua Digital System Lab, program kerja Departemen Programme divisi Technology Operations, Young Investor UNPAD. Saya Rafboy, dan akan menemani teman-teman selama sesi malam ini. Kalau kemarin kita belajar Web Development, malam ini kita masuk ke topik Data Analysis."
+                    script: "Selamat malam semuanya! Selamat datang di hari kedua Digital System Lab, program kerja Departemen Programme divisi Technology Operations, Young Investor UNPAD. Saya Rafi, dan akan menemani teman-teman selama sesi malam ini. Kalau kemarin kita belajar Web Development, malam ini kita masuk ke topik Data Analysis."
                 },
                 {
                     start: "19.05",
                     end: "19.10",
-                    duration: "5 mnt",
+                    duration: "5 menit",
                     agenda: "Expectation Setting",
-                    script: "Sebelum masuk ke materi, saya ingin tahu, apa sih harapan teman-teman di sesi hari ini? Saya persilakan [Nama Peserta] untuk menyampaikan harapannya. Silakan nyalakan mic-nya ya.” (Setelah peserta menjawab) “Terima kasih, [Nama Peserta]! Semoga harapannya tercapai malam ini. Kalau begitu, tanpa menunggu lama, saya persilakan [Sapaan] [Nama Narsum] untuk memaparkan materinya. Waktu dan layar kami serahkan kepada Anda.”"
+                    script: "Sebelum masuk ke materi, saya ingin tahu, apa sih harapan teman-teman di sesi hari ini? Saya persilakan [Nama Peserta] untuk menyampaikan harapannya. Silakan nyalakan mic-nya ya. (Setelah peserta menjawab) Terima kasih, [Nama Peserta]! Semoga harapannya tercapai malam ini. Kalau begitu, tanpa menunggu lama, saya persilakan [Sapaan] [Nama Narsum] untuk memaparkan materinya. Waktu dan layar kami serahkan kepada Anda."
                 },
                 {
                     start: "19.10",
                     end: "20.10",
-                    duration: "60 mnt",
+                    duration: "60 menit",
                     agenda: "Materi dari narasumber",
-                    script: "Terima kasih. Kita lanjut ke sesi utama, yaitu pemaparan materi Data Analysis. Kepada [nama narasumber], waktu dan layar kami persilakan."
+                    script: "Terima kasih. Kita lanjut ke sesi utama, yaitu pemaparan materi Data Analysis. Kepada [Nama Narasumber], waktu dan layar kami persilakan."
                 },
                 {
                     start: "20.10",
                     end: "20.20",
-                    duration: "10 mnt",
+                    duration: "10 menit",
                     agenda: "QnA",
-                    script: "Terima kasih kepada [nama narasumber] atas materi yang sangat bermanfaat. Selanjutnya kita masuk ke sesi tanya jawab. Bagi teman-teman yang ingin bertanya, silakan gunakan fitur raise hand atau kirim pertanyaan melalui [media tanya jawab]."
+                    script: "Terima kasih kepada [Nama Narasumber] atas materi yang sangat bermanfaat. Selanjutnya kita masuk ke sesi tanya jawab. Bagi teman-teman yang ingin bertanya, silakan gunakan fitur raise hand atau kirim pertanyaan melalui [Media Tanya Jawab]."
                 },
                 {
                     start: "20.20",
                     end: "20.50",
-                    duration: "30 mnt",
+                    duration: "30 menit",
                     agenda: "Simulasi (Study Case Data)",
-                    script: "Berikutnya adalah sesi Simulasi Studi Kasus Data & Praktikum. Silakan teman-teman mengakses [tautan/platform studi kasus] dan mengerjakan sesuai arahan panitia. Pastikan hasil simulasi dapat diselesaikan tepat waktu."
+                    script: "Berikutnya adalah sesi Simulasi Studi Kasus Data & Praktikum. Silakan teman-teman mengakses [Tautan/Platform Studi Kasus] dan mengerjakan sesuai arahan panitia. Pastikan hasil simulasi dapat diselesaikan tepat waktu."
                 },
                 {
                     start: "20.50",
                     end: "20.53",
-                    duration: "3 mnt",
+                    duration: "3 menit",
                     agenda: "Pemberian sertifikat",
-                    script: "Kita lanjutkan dengan pemberian sertifikat kepada narasumber sebagai bentuk apresiasi atas kontribusi dan ilmu yang telah dibagikan. Kepada [nama pemberi sertifikat] dan [nama narasumber], dipersilakan."
+                    script: "Kita lanjutkan dengan pemberian sertifikat kepada narasumber sebagai bentuk apresiasi atas kontribusi dan ilmu yang telah dibagikan. Kepada [Nama Pemberi Sertifikat] dan [Nama Narasumber], dipersilakan."
                 },
                 {
                     start: "20.53",
                     end: "20.55",
-                    duration: "2 mnt",
+                    duration: "2 menit",
                     agenda: "Dokumentasi",
                     script: "Selanjutnya, kita akan melakukan dokumentasi bersama. Silakan teman-teman mengikuti arahan panitia dan menyalakan kamera jika memungkinkan. Kita tunggu sampai dokumentasi selesai."
                 },
                 {
                     start: "20.55",
                     end: "21.00",
-                    duration: "5 mnt",
+                    duration: "5 menit",
                     agenda: "Survey feedback",
-                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui [tautan survey]. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terkirim."
+                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui [Tautan Survey]. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terkirim."
                 },
                 {
                     start: "21.00",
                     end: "21.05",
-                    duration: "5 mnt",
+                    duration: "5 menit",
                     agenda: "Penutupan",
-                    script: "Teman-teman, sampailah kita di penghujung seluruh rangkaian Digital System Lab 2026. Terima kasih kepada narasumber, panitia, dan seluruh peserta yang telah berpartisipasi. Semoga ilmu yang didapat bermanfaat. Saya Rafboy pamit undur diri. Selamat malam!"
+                    script: "Teman-teman, sampailah kita di penghujung seluruh rangkaian Digital System Lab 2026. Terima kasih kepada narasumber, panitia, dan seluruh peserta yang telah berpartisipasi. Semoga ilmu yang didapat bermanfaat. Saya Rafi pamit undur diri. Selamat malam!"
                 }
             ]
         };
@@ -619,17 +742,45 @@
 
         // ON LOAD INITIALIZATION
         window.onload = function() {
+            // Check if repo has dsl_schedule.json
+            autoFetchGithubJson();
             renderCard();
             updateClockAndTimers();
             setInterval(updateClockAndTimers, 1000);
             setupTouchGestures();
             setupKeyboardShortcuts();
+
+            // Populate stored Gist details
+            const savedGistId = localStorage.getItem('dsl_mc_gist_id');
+            const savedGistToken = localStorage.getItem('dsl_mc_gist_token');
+            if (savedGistId) document.getElementById('gistIdInput').value = savedGistId;
+            if (savedGistToken) document.getElementById('gistTokenInput').value = savedGistToken;
         };
+
+        // AUTO-FETCH JSON FROM GITHUB PAGES REPOSITORY IF PRESENT
+        function autoFetchGithubJson() {
+            fetch('./dsl_schedule.json')
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('No static json found');
+                })
+                .then(data => {
+                    if (data && data[1] && data[2]) {
+                        scheduleData = data;
+                        saveScheduleData();
+                        renderCard();
+                        console.log('Successfully synced with repository dsl_schedule.json');
+                    }
+                })
+                .catch(err => {
+                    // Fail silently to local storage
+                });
+        }
 
         // LOCAL STORAGE ENGINE
         function loadScheduleData() {
             try {
-                const stored = localStorage.getItem('dsl_mc_schedule_v2');
+                const stored = localStorage.getItem('dsl_mc_schedule_v3');
                 if (stored) {
                     return JSON.parse(stored);
                 }
@@ -640,7 +791,7 @@
         }
 
         function saveScheduleData() {
-            localStorage.setItem('dsl_mc_schedule_v2', JSON.stringify(scheduleData));
+            localStorage.setItem('dsl_mc_schedule_v3', JSON.stringify(scheduleData));
         }
 
         // SWITCH DAY (Day 1 vs Day 2)
@@ -653,10 +804,10 @@
 
             if (day === 1) {
                 d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow";
-                d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1A2130]";
+                d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1B2333]";
             } else {
                 d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow";
-                d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1A2130]";
+                d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1B2333]";
             }
 
             renderCard();
@@ -682,8 +833,10 @@
             document.getElementById('cardTimeRange').innerText = `${item.start} - ${item.end} (${item.duration})`;
             document.getElementById('cardAgendaTitle').innerText = item.agenda;
 
-            // Highlight Bracketed Tags [...] with Tungsten Styling
-            let formattedScript = item.script.replace(/\[(.*?)\]/g, `<span class="script-tag"><i class="fa-solid fa-tag text-[10px] mr-0.5 opacity-70"></i>$1</span>`);
+            // Highlight Bracketed Tags [...] with Tungsten Styling & Parentheses (...) with Soft Cyan Notes
+            let formattedScript = item.script
+                .replace(/\[(.*?)\]/g, `<span class="script-tag"><i class="fa-solid fa-tag text-[10px] mr-0.5 opacity-70"></i>$1</span>`)
+                .replace(/\((.*?)\)/g, `<span class="script-note"><i class="fa-solid fa-circle-info text-[10px] mr-0.5 opacity-70"></i>($1)</span>`);
             
             const scriptEl = document.getElementById('cardScriptContent');
             scriptEl.innerHTML = formattedScript;
@@ -779,7 +932,7 @@
                 liveStatusBadge.className = "text-[9px] font-bold text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded";
             }
 
-            // Countdown to Next Agenda
+            // Countdown to Next Agenda (Soft Velvet Crimson Styling)
             if (nextRealIndex !== -1 && currentList && nextRealIndex < currentList.length) {
                 const nextItem = currentList[nextRealIndex];
                 nextAgendaTitleEl.innerText = `Selanjutnya: ${nextItem.start} - ${nextItem.agenda}`;
@@ -794,11 +947,12 @@
                     const diffS = diffSeconds % 60;
                     
                     if (diffM < 2) {
-                        nextCountdownEl.className = "tabular-numbers font-bold text-crimson-studio text-xs sm:text-sm animate-pulse";
-                        countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-rose-950/20 border border-crimson-studio/40 rounded-xl flex flex-col justify-center transition-colors";
+                        // Soft Velvet Crimson Red (No harsh glare)
+                        nextCountdownEl.className = "tabular-numbers font-bold text-velvet-crimson text-xs sm:text-sm animate-pulse";
+                        countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-velvet-bg border border-velvet-border rounded-xl flex flex-col justify-center transition-colors";
                     } else {
                         nextCountdownEl.className = "tabular-numbers font-bold text-amber-400 text-xs sm:text-sm";
-                        countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl flex flex-col justify-center transition-colors";
+                        countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#141A26] border border-[#222A3A] rounded-xl flex flex-col justify-center transition-colors";
                     }
 
                     nextCountdownEl.innerText = `${String(diffM).padStart(2, '0')}m ${String(diffS).padStart(2, '0')}s`;
@@ -808,8 +962,135 @@
             } else {
                 nextAgendaTitleEl.innerText = "Selanjutnya: Selesai";
                 nextCountdownEl.innerText = "--m --s";
-                countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl flex flex-col justify-center";
+                countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#141A26] border border-[#222A3A] rounded-xl flex flex-col justify-center";
             }
+        }
+
+        // CLOUD & MULTI-DEVICE SYNC FUNCTIONS
+        function openCloudModal() {
+            document.getElementById('cloudModal').classList.remove('hidden');
+        }
+
+        function closeCloudModal() {
+            document.getElementById('cloudModal').classList.add('hidden');
+        }
+
+        function exportJSONFile() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scheduleData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "dsl_schedule.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast("dsl_schedule.json berhasil diunduh! Commit ke GitHub Anda.");
+        }
+
+        function copyRawJSON() {
+            const jsonText = JSON.stringify(scheduleData, null, 2);
+            document.getElementById('importJsonArea').value = jsonText;
+            
+            // execCommand fallback for iframe clipboard restriction
+            const el = document.createElement('textarea');
+            el.value = jsonText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast("Raw JSON berhasil disalin ke clipboard!");
+        }
+
+        function importJSONData() {
+            const raw = document.getElementById('importJsonArea').value.trim();
+            if (!raw) return;
+            try {
+                const parsed = JSON.parse(raw);
+                if (parsed[1] && parsed[2]) {
+                    scheduleData = parsed;
+                    saveScheduleData();
+                    renderCard();
+                    closeCloudModal();
+                    showToast("Data script berhasil di-import!");
+                } else {
+                    showToast("Format JSON kurang tepat (harus memiliki Day 1 & Day 2).");
+                }
+            } catch (e) {
+                showToast("Gagal parse JSON: Format tidak valid!");
+            }
+        }
+
+        function fetchFromGist() {
+            const gistId = document.getElementById('gistIdInput').value.trim();
+            if (!gistId) {
+                showToast("Masukkan Gist ID terlebih dahulu!");
+                return;
+            }
+
+            localStorage.setItem('dsl_mc_gist_id', gistId);
+
+            fetch(`https://api.github.com/gists/${gistId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Gist not found');
+                    return res.json();
+                })
+                .then(data => {
+                    const files = data.files;
+                    const firstFileName = Object.keys(files)[0];
+                    const content = files[firstFileName].content;
+                    const parsed = JSON.parse(content);
+                    if (parsed[1] && parsed[2]) {
+                        scheduleData = parsed;
+                        saveScheduleData();
+                        renderCard();
+                        closeCloudModal();
+                        showToast("Script berhasil ditarik dari Cloud Gist!");
+                    }
+                })
+                .catch(err => {
+                    showToast("Gagal mengambil data dari Gist! Cek Gist ID.");
+                });
+        }
+
+        function pushToGist() {
+            const gistId = document.getElementById('gistIdInput').value.trim();
+            const gistToken = document.getElementById('gistTokenInput').value.trim();
+
+            if (!gistId || !gistToken) {
+                showToast("Gist ID dan Personal Token wajib diisi untuk Push Cloud!");
+                return;
+            }
+
+            localStorage.setItem('dsl_mc_gist_id', gistId);
+            localStorage.setItem('dsl_mc_gist_token', gistToken);
+
+            const payload = {
+                files: {
+                    "dsl_schedule.json": {
+                        content: JSON.stringify(scheduleData, null, 2)
+                    }
+                }
+            };
+
+            fetch(`https://api.github.com/gists/${gistId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `token ${gistToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Gist push failed');
+                return res.json();
+            })
+            .then(() => {
+                showToast("Script terbaru berhasil di-upload ke Cloud Gist!");
+                closeCloudModal();
+            })
+            .catch(() => {
+                showToast("Gagal upload! Periksa Token & Akses Gist.");
+            });
         }
 
         // EDIT SCRIPT & AGENDA FUNCTIONS
@@ -868,7 +1149,7 @@
             const newItem = {
                 start: "21.10",
                 end: "21.15",
-                duration: "5 mnt",
+                duration: "5 menit",
                 agenda: "Agenda Tambahan Baru",
                 script: "Tuliskan script MC untuk agenda tambahan ini..."
             };
@@ -901,7 +1182,7 @@
         function confirmResetDefault() {
             showCustomConfirm(
                 "Reset Ke Script Asli Panitia?",
-                "Semua editan script MC Anda pada Day 1 dan Day 2 akan dikembalikan ke draf default.",
+                "Semua editan script MC Anda pada Day 1 dan Day 2 akan dikembalikan ke draf default PDF terbaru.",
                 function() {
                     scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_DATA));
                     saveScheduleData();
@@ -963,7 +1244,7 @@
                 dot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
                 updateClockAndTimers();
             } else {
-                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-[#121620] text-slate-400 border-[#222938] hover:bg-[#1A2130]";
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-[#141A26] text-slate-400 border-[#222A3A] hover:bg-[#1B2333]";
                 label.innerText = "MANUAL MODE";
                 ping.className = "hidden";
                 dot.className = "relative inline-flex rounded-full h-2 w-2 bg-amber-500";
@@ -1018,7 +1299,6 @@
         // KEYBOARD SHORTCUTS
         function setupKeyboardShortcuts() {
             document.addEventListener('keydown', (e) => {
-                // Ignore keypresses when editing in text inputs/modals
                 if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
                 const key = e.key.toLowerCase();
@@ -1065,24 +1345,24 @@
                         <div class="p-3.5 rounded-xl border transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
                             isActive 
                             ? 'bg-amber-500/10 border-amber-500/40 text-amber-200' 
-                            : 'bg-[#0B0D12] border-[#222938] text-slate-300 hover:bg-[#1A2130]'
+                            : 'bg-[#090B0F] border-[#222A3A] text-slate-300 hover:bg-[#1B2333]'
                         }">
                             <div class="flex items-start gap-3 flex-1 cursor-pointer" onclick="jumpToAgenda(${idx})">
                                 <span class="font-mono text-xs font-bold text-slate-500 mt-0.5">${paddedIdx}</span>
                                 <div>
                                     <div class="flex items-center gap-2">
                                         <span class="tabular-numbers text-xs font-bold ${isActive ? 'text-amber-400' : 'text-slate-400'}">${item.start} - ${item.end}</span>
-                                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#121620] text-slate-400 border border-[#222938] font-mono">${item.duration}</span>
+                                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#141A26] text-slate-400 border border-[#222A3A] font-mono">${item.duration}</span>
                                         ${isActive ? '<span class="text-[9px] bg-amber-500 text-slate-950 font-bold px-1.5 py-0.2 rounded">AKTIF</span>' : ''}
                                     </div>
                                     <div class="font-semibold text-sm mt-0.5 text-slate-200">${item.agenda}</div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0">
-                                <button onclick="openEditModal(${idx})" class="p-2 rounded-lg bg-[#121620] hover:bg-amber-500/20 hover:text-amber-300 text-slate-400 border border-[#222938] text-xs transition" title="Edit Script Agenda Ini">
+                                <button onclick="openEditModal(${idx})" class="p-2 rounded-lg bg-[#141A26] hover:bg-amber-500/20 hover:text-amber-300 text-slate-400 border border-[#222A3A] text-xs transition" title="Edit Script Agenda Ini">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
-                                <button onclick="deleteAgenda(${idx})" class="p-2 rounded-lg bg-[#121620] hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 border border-[#222938] text-xs transition" title="Hapus Agenda Ini">
+                                <button onclick="deleteAgenda(${idx})" class="p-2 rounded-lg bg-[#141A26] hover:bg-red-500/20 hover:text-red-400 text-slate-400 border border-[#222A3A] text-xs transition" title="Hapus Agenda Ini">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                                 <button onclick="jumpToAgenda(${idx})" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold transition">
