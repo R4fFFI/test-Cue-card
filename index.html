@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="id" class="dark">
 <head>
@@ -344,4 +343,763 @@
             </div>
             
             <!-- Modal Agenda List Container -->
-            <div class="p-4 overflow-y-auto flex-1 space-y-2.5" id="agendaL
+            <div class="p-4 overflow-y-auto flex-1 space-y-2.5" id="agendaListContainer">
+                <!-- Agenda items rendered dynamically -->
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="p-3.5 border-t border-[#222938] bg-[#0B0D12] flex flex-wrap items-center justify-between gap-3">
+                <button onclick="confirmResetDefault()" class="px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-rotate-left"></i> Reset Ke Script Asli
+                </button>
+                <button onclick="closeAgendaModal()" class="px-4 py-1.5 bg-[#121620] hover:bg-[#1A2130] text-slate-300 text-xs font-semibold rounded-xl border border-[#222938]">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: EDIT SINGLE AGENDA / SCRIPT FORM -->
+    <div id="editAgendaModal" class="fixed inset-0 z-50 bg-[#0B0D12]/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#121620] border border-[#222938] rounded-2xl w-full max-w-2xl flex flex-col shadow-2xl overflow-hidden max-h-[90vh]">
+            
+            <!-- Modal Header -->
+            <div class="p-4 border-b border-[#222938] flex items-center justify-between bg-[#0B0D12]">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-pen-to-square text-amber-500"></i>
+                    <h3 class="font-bold text-slate-100 text-sm sm:text-base" id="editModalHeaderTitle">Edit Script & Agenda MC</h3>
+                </div>
+                <button onclick="closeEditModal()" class="w-8 h-8 rounded-lg bg-[#121620] text-slate-400 hover:text-white flex items-center justify-center border border-[#222938]">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Edit Form Fields -->
+            <form id="editAgendaForm" onsubmit="saveEditedAgenda(event)" class="p-5 overflow-y-auto space-y-4 flex-1">
+                <input type="hidden" id="editAgendaIndex">
+
+                <!-- Grid Time inputs -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Jam Start (WIB)</label>
+                        <input type="text" id="editStart" required placeholder="18.45" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Jam End (WIB)</label>
+                        <input type="text" id="editEnd" required placeholder="19.00" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Durasi</label>
+                        <input type="text" id="editDuration" required placeholder="15 menit" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3 py-2 text-sm text-slate-100 font-mono focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                    </div>
+                </div>
+
+                <!-- Agenda Title input -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Judul Agenda</label>
+                    <input type="text" id="editTitle" required placeholder="Preparation & Open gate" class="w-full bg-[#090B0F] border border-[#222938] rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-100 focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                </div>
+
+                <!-- MC Script Textarea -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Teks Script MC Prompt</label>
+                        <span class="text-[11px] text-amber-400 font-medium">Gunakan <code class="bg-[#090B0F] px-1 rounded text-amber-300">[Tag Nama]</code> untuk penanda otomatis</span>
+                    </div>
+                    <textarea id="editScript" rows="7" required placeholder="Tuliskan teks script MC di sini..." class="w-full bg-[#090B0F] border border-[#222938] rounded-xl p-3.5 text-sm text-slate-100 leading-relaxed focus:border-amber-500 focus:ring-1 focus:ring-amber-500 font-sans"></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-2 flex items-center justify-end gap-3 border-t border-[#222938]">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-[#0B0D12] hover:bg-[#1A2130] text-slate-300 text-xs font-semibold rounded-xl border border-[#222938]">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CONFIRMATION MODAL (NO ALERT/CONFIRM) -->
+    <div id="confirmModal" class="fixed inset-0 z-50 bg-[#0B0D12]/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-[#121620] border border-[#222938] rounded-2xl w-full max-w-md p-5 shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-100" id="confirmTitle">Reset Ke Script Asli?</h3>
+                <p class="text-xs text-slate-400 mt-1" id="confirmDesc">Semua perubahan script yang telah Anda edit di Day 1 & Day 2 akan dikembalikan ke draf bawaan panitia.</p>
+            </div>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button id="confirmCancelBtn" class="px-4 py-2 bg-[#0B0D12] hover:bg-[#1A2130] text-slate-300 text-xs font-semibold rounded-xl border border-[#222938]">
+                    Batal
+                </button>
+                <button id="confirmOkBtn" class="px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-xl shadow">
+                    Ya, Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION POPUP -->
+    <div id="toastNotification" class="fixed bottom-16 right-4 z-50 bg-amber-500 text-slate-950 font-bold text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 hidden toast-animate border border-amber-300">
+        <i class="fa-solid fa-circle-check text-base"></i>
+        <span id="toastMessage">Perubahan berhasil disimpan!</span>
+    </div>
+
+    <!-- JAVASCRIPT BROADCAST LOGIC & LOCALSTORAGE EDIT ENGINE -->
+    <script>
+        // ORIGINAL DEFAULT PANITIA SCHEDULE DATA
+        const DEFAULT_SCHEDULE_DATA = {
+            1: [
+                {
+                    start: "18.45",
+                    end: "19.00",
+                    duration: "15 mnt",
+                    agenda: "Preparation & Open gate",
+                    script: "Halo teman-teman semua! Selamat datang di Google Meet Digital System Lab Day 1! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman kalian ya. Boleh disiapin juga catatan, karena malam ini kita bakal bedah topik yang super seru seputar Web Development & Pemanfaatan AI dalam Pengembangan Website!"
+                },
+                {
+                    start: "19.00",
+                    end: "19.02",
+                    duration: "2 mnt",
+                    agenda: "Opening By MC",
+                    script: "Selamat malam semuanya! Yang terhormat para Project Supervisors, Project Officer, panitia yang bertugas, serta seluruh peserta Digital System Lab yang luar biasa antusias malam ini! Kenalin, aku Rafboy dari divisi Technology Operations Young Investor UNPAD, yang bakal menemani teman-teman selama sesi malam ini. Di hari pertama ini, kita akan masuk ke topik Web Development. Terima kasih banyak buat teman-teman yang sudah meluangkan waktunya di tengah kesibukan!"
+                },
+                {
+                    start: "19.02",
+                    end: "19.05",
+                    duration: "3 mnt",
+                    agenda: "Pemaparan Profil Narsum",
+                    script: "Nah, biar makin afdal dan kenal dengan sosok luar biasa yang bakal membagikan ilmunya malam ini, yuk kita tengok profil narasumber hebat kita di layar! Pemateri kita kali ini punya segudang pengalaman keren di bidang Web Development. Mantap banget kan? Pasti udah gak sabar buat menimba ilmu langsung dari ahlinya!"
+                },
+                {
+                    start: "19.05",
+                    end: "19.10",
+                    duration: "5 mnt",
+                    agenda: "Expectation Setting",
+                    script: "Sebelum materi dimulai, aku pengen denger dong dari kalian. Coba aku tunjuk satu orang ya... [Sebut nama peserta], boleh unmute mic atau tulis di kolom chat, apa nih ekspektasi kamu buat sesi Web Development malam ini? ... Keren banget! Semoga seluruh ekspektasi itu terjawab tuntas malam ini ya. Tanpa nunggu lama lagi, yuk langsung aja kita masuk ke sesi materi!"
+                },
+                {
+                    start: "19.10",
+                    end: "20.10",
+                    duration: "60 mnt",
+                    agenda: "Materi dari Narsum",
+                    script: "Kepada [Sebut nama narsum], waktu dan layar aku persilakan!”"
+                },
+                {
+                    start: "20.10",
+                    end: "20.25",
+                    duration: "15 mnt",
+                    agenda: "QnA",
+                    script: "Wah, dapet ilmu daging banget ya dari narasumber kita! Sekarang giliran kalian yang beraksi. Buat yang punya pertanyaan, langsung aja tekan tombol raise hand buat unmute, atau ketik pertanyaan kalian di kolom chat ya!”"
+                },
+                {
+                    start: "20.25",
+                    end: "20.55",
+                    duration: "30 mnt",
+                    agenda: "Post Test (Simulasi bikin website)",
+                    script: "Nah, biar tau seberapa jago pemahaman kita malam ini, yuk kita lanjut ke sesi Post Test & Simulasi Pembuatan Website! Link-nya udah dibagikan teman-teman panitia di kolom chat. Waktu kalian 30 menit, selamat mengerjakan dan lakukan yang terbaik!"
+                },
+                {
+                    start: "20.55",
+                    end: "20.58",
+                    duration: "3 mnt",
+                    agenda: "Pemberian Sertifikat",
+                    script: "Luar biasa banget antusiasme simulasinya! Sebagai bentuk apresiasi dan rasa terima kasih, aku mewakili panitia mau menyerahkan sertifikat secara simbolis kepada [Sebut nama narsum]. Makasih banyak ya atas ilmu dan waktunya malam ini!”"
+                },
+                {
+                    start: "20.58",
+                    end: "21.00",
+                    duration: "2 mnt",
+                    agenda: "Dokumentasi",
+                    script: "Sebelum narasumber kita pamit, yuk teman-teman buka kameranya sebentar biar kita bisa foto bareng! Pasang senyum paling manis ya. Aku hitung: 1... 2... 3... cheers!”"
+                },
+                {
+                    start: "21.00",
+                    end: "21.05",
+                    duration: "5 mnt",
+                    agenda: "Survey Feedback",
+                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui link yang dibagikan panitia di kolom chat atau QR code di layar. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terisi ya!"
+                },
+                {
+                    start: "21.05",
+                    end: "21.10",
+                    duration: "5 mnt",
+                    agenda: "Penutupan",
+                    script: "Terima kasih banyak buat narasumber dan teman-teman semua yang udah semangat dari awal sampai akhir. Jangan lupa, besok kita masih punya Day 2 dengan topik yang gak kalah seru yaitu Data Analysis! Sampai ketemu besok malam jam 18:45 WIB ya. Saya Rafboy pamit undur diri. Selamat malam!"
+                }
+            ],
+            2: [
+                {
+                    start: "18.45",
+                    end: "19.00",
+                    duration: "15 mnt",
+                    agenda: "Preparation & Open gate",
+                    script: "Selamat malam teman-teman semua! Selamat datang di Digital System Lab Day 2! Sambil menunggu rekan-rekan yang lain masuk, persiapkan posisi paling nyaman dan siapkan catatan serta laptop kalian ya, karena malam ini kita bakal bedah topik Data Analysis!"
+                },
+                {
+                    start: "19.00",
+                    end: "19.05",
+                    duration: "5 mnt",
+                    agenda: "Opening By MC",
+                    script: "Selamat malam semuanya! Selamat datang di hari kedua Digital System Lab, program kerja Departemen Programme divisi Technology Operations, Young Investor UNPAD. Saya Rafboy, dan akan menemani teman-teman selama sesi malam ini. Kalau kemarin kita belajar Web Development, malam ini kita masuk ke topik Data Analysis."
+                },
+                {
+                    start: "19.05",
+                    end: "19.10",
+                    duration: "5 mnt",
+                    agenda: "Expectation Setting",
+                    script: "Sebelum masuk ke materi, saya ingin tahu, apa sih harapan teman-teman di sesi hari ini? Saya persilakan [Nama Peserta] untuk menyampaikan harapannya. Silakan nyalakan mic-nya ya.” (Setelah peserta menjawab) “Terima kasih, [Nama Peserta]! Semoga harapannya tercapai malam ini. Kalau begitu, tanpa menunggu lama, saya persilakan [Sapaan] [Nama Narsum] untuk memaparkan materinya. Waktu dan layar kami serahkan kepada Anda.”"
+                },
+                {
+                    start: "19.10",
+                    end: "20.10",
+                    duration: "60 mnt",
+                    agenda: "Materi dari narasumber",
+                    script: "Terima kasih. Kita lanjut ke sesi utama, yaitu pemaparan materi Data Analysis. Kepada [nama narasumber], waktu dan layar kami persilakan."
+                },
+                {
+                    start: "20.10",
+                    end: "20.20",
+                    duration: "10 mnt",
+                    agenda: "QnA",
+                    script: "Terima kasih kepada [nama narasumber] atas materi yang sangat bermanfaat. Selanjutnya kita masuk ke sesi tanya jawab. Bagi teman-teman yang ingin bertanya, silakan gunakan fitur raise hand atau kirim pertanyaan melalui [media tanya jawab]."
+                },
+                {
+                    start: "20.20",
+                    end: "20.50",
+                    duration: "30 mnt",
+                    agenda: "Simulasi (Study Case Data)",
+                    script: "Berikutnya adalah sesi Simulasi Studi Kasus Data & Praktikum. Silakan teman-teman mengakses [tautan/platform studi kasus] dan mengerjakan sesuai arahan panitia. Pastikan hasil simulasi dapat diselesaikan tepat waktu."
+                },
+                {
+                    start: "20.50",
+                    end: "20.53",
+                    duration: "3 mnt",
+                    agenda: "Pemberian sertifikat",
+                    script: "Kita lanjutkan dengan pemberian sertifikat kepada narasumber sebagai bentuk apresiasi atas kontribusi dan ilmu yang telah dibagikan. Kepada [nama pemberi sertifikat] dan [nama narasumber], dipersilakan."
+                },
+                {
+                    start: "20.53",
+                    end: "20.55",
+                    duration: "2 mnt",
+                    agenda: "Dokumentasi",
+                    script: "Selanjutnya, kita akan melakukan dokumentasi bersama. Silakan teman-teman mengikuti arahan panitia dan menyalakan kamera jika memungkinkan. Kita tunggu sampai dokumentasi selesai."
+                },
+                {
+                    start: "20.55",
+                    end: "21.00",
+                    duration: "5 mnt",
+                    agenda: "Survey feedback",
+                    script: "Sebelum acara berakhir, kami mengajak teman-teman untuk mengisi survey feedback melalui [tautan survey]. Masukan teman-teman sangat berarti untuk evaluasi dan pengembangan kegiatan berikutnya. Mohon pastikan survey sudah terkirim."
+                },
+                {
+                    start: "21.00",
+                    end: "21.05",
+                    duration: "5 mnt",
+                    agenda: "Penutupan",
+                    script: "Teman-teman, sampailah kita di penghujung seluruh rangkaian Digital System Lab 2026. Terima kasih kepada narasumber, panitia, dan seluruh peserta yang telah berpartisipasi. Semoga ilmu yang didapat bermanfaat. Saya Rafboy pamit undur diri. Selamat malam!"
+                }
+            ]
+        };
+
+        // APPLICATION STATE
+        let scheduleData = loadScheduleData();
+        let currentDay = 1;
+        let currentIndex = 0;
+        let isAutoSync = true;
+        let fontSizePx = 24;
+
+        // Touch Swipe Variables
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // ON LOAD INITIALIZATION
+        window.onload = function() {
+            renderCard();
+            updateClockAndTimers();
+            setInterval(updateClockAndTimers, 1000);
+            setupTouchGestures();
+            setupKeyboardShortcuts();
+        };
+
+        // LOCAL STORAGE ENGINE
+        function loadScheduleData() {
+            try {
+                const stored = localStorage.getItem('dsl_mc_schedule_v2');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+            } catch (e) {
+                console.error('Failed to parse stored schedule', e);
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_DATA));
+        }
+
+        function saveScheduleData() {
+            localStorage.setItem('dsl_mc_schedule_v2', JSON.stringify(scheduleData));
+        }
+
+        // SWITCH DAY (Day 1 vs Day 2)
+        function switchDay(day) {
+            currentDay = day;
+            currentIndex = 0;
+            
+            const d1 = document.getElementById('day1Btn');
+            const d2 = document.getElementById('day2Btn');
+
+            if (day === 1) {
+                d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow";
+                d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1A2130]";
+            } else {
+                d2.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow";
+                d1.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-[#1A2130]";
+            }
+
+            renderCard();
+            updateClockAndTimers();
+        }
+
+        // RENDER ACTIVE CUE CARD
+        function renderCard() {
+            const currentList = scheduleData[currentDay];
+            if (!currentList || currentList.length === 0) {
+                document.getElementById('cardScriptContent').innerText = "Belum ada agenda di hari ini. Klik 'Kelola Rundown' untuk menambah agenda.";
+                document.getElementById('cardAgendaTitle').innerText = "Agenda Kosong";
+                return;
+            }
+
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= currentList.length) currentIndex = currentList.length - 1;
+
+            const item = currentList[currentIndex];
+
+            // Render Badges and Titles
+            document.getElementById('cardDayBadge').innerText = currentDay === 1 ? 'Day 1 (Web Dev)' : 'Day 2 (Data Analysis)';
+            document.getElementById('cardTimeRange').innerText = `${item.start} - ${item.end} (${item.duration})`;
+            document.getElementById('cardAgendaTitle').innerText = item.agenda;
+
+            // Highlight Bracketed Tags [...] with Tungsten Styling
+            let formattedScript = item.script.replace(/\[(.*?)\]/g, `<span class="script-tag"><i class="fa-solid fa-tag text-[10px] mr-0.5 opacity-70"></i>$1</span>`);
+            
+            const scriptEl = document.getElementById('cardScriptContent');
+            scriptEl.innerHTML = formattedScript;
+            scriptEl.style.fontSize = `${fontSizePx}px`;
+
+            // Reset scroll position
+            document.getElementById('scriptScrollContainer').scrollTop = 0;
+
+            // Update Bottom Indicators
+            const paddedIndex = String(currentIndex + 1).padStart(2, '0');
+            const paddedTotal = String(currentList.length).padStart(2, '0');
+            document.getElementById('currentAgendaIndexText').innerText = `Agenda ${paddedIndex}/${paddedTotal}`;
+            document.getElementById('currentScriptAgendaName').innerText = item.agenda;
+        }
+
+        // NAVIGATION CONTROLS
+        function nextAgenda() {
+            const max = scheduleData[currentDay].length;
+            if (currentIndex < max - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        }
+
+        function prevAgenda() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        }
+
+        function jumpToAgenda(index) {
+            currentIndex = index;
+            renderCard();
+            closeAgendaModal();
+        }
+
+        // REAL-TIME CLOCK & SCHEDULE CALCULATION
+        function updateClockAndTimers() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('realTimeClock').innerText = `${hours}:${minutes}:${seconds}`;
+
+            const nowTotalMinutes = now.getHours() * 60 + now.getMinutes();
+            const currentList = scheduleData[currentDay];
+
+            let activeRealIndex = -1;
+            let nextRealIndex = -1;
+
+            if (currentList && currentList.length > 0) {
+                for (let i = 0; i < currentList.length; i++) {
+                    const [startH, startM] = currentList[i].start.split('.').map(Number);
+                    const [endH, endM] = currentList[i].end.split('.').map(Number);
+
+                    const startTotal = startH * 60 + startM;
+                    const endTotal = endH * 60 + endM;
+
+                    if (nowTotalMinutes >= startTotal && nowTotalMinutes < endTotal) {
+                        activeRealIndex = i;
+                        nextRealIndex = i + 1 < currentList.length ? i + 1 : -1;
+                        break;
+                    } else if (nowTotalMinutes < startTotal) {
+                        if (activeRealIndex === -1) {
+                            nextRealIndex = i;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            const realAgendaTitleEl = document.getElementById('realTimeAgendaTitle');
+            const nextAgendaTitleEl = document.getElementById('nextAgendaTitle');
+            const nextCountdownEl = document.getElementById('nextCountdown');
+            const countdownBox = document.getElementById('countdownBox');
+            const liveStatusBadge = document.getElementById('liveStatusBadge');
+
+            if (activeRealIndex !== -1) {
+                const activeItem = currentList[activeRealIndex];
+                realAgendaTitleEl.innerText = `${activeItem.start} - ${activeItem.agenda}`;
+                liveStatusBadge.innerText = "LIVE";
+                liveStatusBadge.className = "text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20";
+                
+                if (isAutoSync && currentIndex !== activeRealIndex) {
+                    currentIndex = activeRealIndex;
+                    renderCard();
+                }
+            } else {
+                realAgendaTitleEl.innerText = "Luar Sesi / Standby";
+                liveStatusBadge.innerText = "STANDBY";
+                liveStatusBadge.className = "text-[9px] font-bold text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded";
+            }
+
+            // Countdown to Next Agenda
+            if (nextRealIndex !== -1 && currentList && nextRealIndex < currentList.length) {
+                const nextItem = currentList[nextRealIndex];
+                nextAgendaTitleEl.innerText = `Selanjutnya: ${nextItem.start} - ${nextItem.agenda}`;
+
+                const [nextH, nextM] = nextItem.start.split('.').map(Number);
+                const targetTotalSeconds = (nextH * 60 + nextM) * 60;
+                const currentTotalSeconds = (now.getHours() * 60 + now.getMinutes()) * 60 + now.getSeconds();
+
+                let diffSeconds = targetTotalSeconds - currentTotalSeconds;
+                if (diffSeconds > 0) {
+                    const diffM = Math.floor(diffSeconds / 60);
+                    const diffS = diffSeconds % 60;
+                    
+                    if (diffM < 2) {
+                        nextCountdownEl.className = "tabular-numbers font-bold text-crimson-studio text-xs sm:text-sm animate-pulse";
+                        countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-rose-950/20 border border-crimson-studio/40 rounded-xl flex flex-col justify-center transition-colors";
+                    } else {
+                        nextCountdownEl.className = "tabular-numbers font-bold text-amber-400 text-xs sm:text-sm";
+                        countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl flex flex-col justify-center transition-colors";
+                    }
+
+                    nextCountdownEl.innerText = `${String(diffM).padStart(2, '0')}m ${String(diffS).padStart(2, '0')}s`;
+                } else {
+                    nextCountdownEl.innerText = "00m 00s";
+                }
+            } else {
+                nextAgendaTitleEl.innerText = "Selanjutnya: Selesai";
+                nextCountdownEl.innerText = "--m --s";
+                countdownBox.className = "flex-1 min-w-[180px] max-w-[250px] px-3.5 py-2 bg-[#121620] border border-[#222938] rounded-xl flex flex-col justify-center";
+            }
+        }
+
+        // EDIT SCRIPT & AGENDA FUNCTIONS
+        function openCurrentEditModal() {
+            openEditModal(currentIndex);
+        }
+
+        function openEditModal(index) {
+            const currentList = scheduleData[currentDay];
+            if (!currentList || !currentList[index]) return;
+
+            const item = currentList[index];
+            document.getElementById('editAgendaIndex').value = index;
+            document.getElementById('editStart').value = item.start;
+            document.getElementById('editEnd').value = item.end;
+            document.getElementById('editDuration').value = item.duration;
+            document.getElementById('editTitle').value = item.agenda;
+            document.getElementById('editScript').value = item.script;
+
+            document.getElementById('editModalHeaderTitle').innerText = `Edit Agenda #${index + 1} (${currentDay === 1 ? 'Day 1' : 'Day 2'})`;
+            document.getElementById('editAgendaModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editAgendaModal').classList.add('hidden');
+        }
+
+        function saveEditedAgenda(e) {
+            e.preventDefault();
+            const idx = parseInt(document.getElementById('editAgendaIndex').value);
+            const currentList = scheduleData[currentDay];
+
+            if (isNaN(idx) || !currentList || idx < 0 || idx >= currentList.length) return;
+
+            currentList[idx] = {
+                start: document.getElementById('editStart').value.trim(),
+                end: document.getElementById('editEnd').value.trim(),
+                duration: document.getElementById('editDuration').value.trim(),
+                agenda: document.getElementById('editTitle').value.trim(),
+                script: document.getElementById('editScript').value.trim()
+            };
+
+            saveScheduleData();
+            renderCard();
+            closeEditModal();
+            showToast("Perubahan script MC berhasil disimpan!");
+
+            // Refresh modal list if open
+            if (!document.getElementById('agendaModal').classList.contains('hidden')) {
+                openAgendaModal();
+            }
+        }
+
+        function addNewAgenda() {
+            const currentList = scheduleData[currentDay];
+            const newItem = {
+                start: "21.10",
+                end: "21.15",
+                duration: "5 mnt",
+                agenda: "Agenda Tambahan Baru",
+                script: "Tuliskan script MC untuk agenda tambahan ini..."
+            };
+
+            currentList.push(newItem);
+            saveScheduleData();
+            currentIndex = currentList.length - 1;
+            renderCard();
+            openAgendaModal();
+            openEditModal(currentIndex);
+            showToast("Agenda baru berhasil ditambahkan!");
+        }
+
+        function deleteAgenda(idx) {
+            const currentList = scheduleData[currentDay];
+            if (!currentList || idx < 0 || idx >= currentList.length) return;
+
+            currentList.splice(idx, 1);
+            saveScheduleData();
+
+            if (currentIndex >= currentList.length) {
+                currentIndex = Math.max(0, currentList.length - 1);
+            }
+
+            renderCard();
+            openAgendaModal();
+            showToast("Agenda berhasil dihapus.");
+        }
+
+        function confirmResetDefault() {
+            showCustomConfirm(
+                "Reset Ke Script Asli Panitia?",
+                "Semua editan script MC Anda pada Day 1 dan Day 2 akan dikembalikan ke draf default.",
+                function() {
+                    scheduleData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_DATA));
+                    saveScheduleData();
+                    currentIndex = 0;
+                    renderCard();
+                    closeAgendaModal();
+                    showToast("Script berhasil dikembalikan ke asli!");
+                }
+            );
+        }
+
+        // CUSTOM CONFIRMATION DIALOG (REPLACES confirm())
+        function showCustomConfirm(title, desc, onOk) {
+            const modal = document.getElementById('confirmModal');
+            document.getElementById('confirmTitle').innerText = title;
+            document.getElementById('confirmDesc').innerText = desc;
+
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            const cleanUp = () => {
+                modal.classList.add('hidden');
+                okBtn.onclick = null;
+                cancelBtn.onclick = null;
+            };
+
+            okBtn.onclick = function() {
+                cleanUp();
+                if (onOk) onOk();
+            };
+
+            cancelBtn.onclick = cleanUp;
+            modal.classList.remove('hidden');
+        }
+
+        // TOAST NOTIFICATION
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+
+        // TOGGLE AUTO-SYNC
+        function toggleAutoSync() {
+            isAutoSync = !isAutoSync;
+            const btn = document.getElementById('autoSyncBtn');
+            const label = document.getElementById('autoSyncLabel');
+            const ping = document.getElementById('autoSyncPing');
+            const dot = document.getElementById('autoSyncDot');
+
+            if (isAutoSync) {
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20";
+                label.innerText = "AUTO SYNC";
+                ping.className = "live-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400";
+                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
+                updateClockAndTimers();
+            } else {
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 border transition-all duration-200 bg-[#121620] text-slate-400 border-[#222938] hover:bg-[#1A2130]";
+                label.innerText = "MANUAL MODE";
+                ping.className = "hidden";
+                dot.className = "relative inline-flex rounded-full h-2 w-2 bg-amber-500";
+            }
+        }
+
+        // FONT SIZE CONTROLLER
+        function changeFontSize(delta) {
+            fontSizePx = Math.max(16, Math.min(42, fontSizePx + delta));
+            const scriptEl = document.getElementById('cardScriptContent');
+            if (scriptEl) scriptEl.style.fontSize = `${fontSizePx}px`;
+        }
+
+        function resetFontSize() {
+            fontSizePx = 24;
+            const scriptEl = document.getElementById('cardScriptContent');
+            if (scriptEl) scriptEl.style.fontSize = `${fontSizePx}px`;
+        }
+
+        // FULLSCREEN TOGGLE
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        // TOUCH & SWIPE GESTURES
+        function setupTouchGestures() {
+            const touchArea = document.getElementById('touchArea');
+
+            touchArea.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            touchArea.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        function handleSwipe() {
+            const threshold = 45;
+            if (touchEndX < touchStartX - threshold) {
+                nextAgenda();
+            } else if (touchEndX > touchStartX + threshold) {
+                prevAgenda();
+            }
+        }
+
+        // KEYBOARD SHORTCUTS
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ignore keypresses when editing in text inputs/modals
+                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+                const key = e.key.toLowerCase();
+                if (e.key === 'ArrowRight' || key === 'j' || e.key === ' ') {
+                    e.preventDefault();
+                    nextAgenda();
+                } else if (e.key === 'ArrowLeft' || key === 'k') {
+                    e.preventDefault();
+                    prevAgenda();
+                } else if (key === 'e') {
+                    e.preventDefault();
+                    openCurrentEditModal();
+                } else if (key === 'm') {
+                    toggleAutoSync();
+                } else if (key === 'f') {
+                    toggleFullScreen();
+                } else if (key === 'r') {
+                    const modal = document.getElementById('agendaModal');
+                    if (modal.classList.contains('hidden')) {
+                        openAgendaModal();
+                    } else {
+                        closeAgendaModal();
+                    }
+                }
+            });
+        }
+
+        // RUNDOWN LIST MODAL
+        function openAgendaModal() {
+            const modal = document.getElementById('agendaModal');
+            const container = document.getElementById('agendaListContainer');
+            const modalDayTitle = document.getElementById('modalDayTitle');
+            
+            modalDayTitle.innerText = currentDay === 1 ? 'Day 1 (Web Dev)' : 'Day 2 (Data Analysis)';
+            const currentList = scheduleData[currentDay];
+
+            if (!currentList || currentList.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-500 text-xs font-semibold">Tidak ada agenda. Klik 'Tambah Agenda' di kanan atas.</div>`;
+            } else {
+                container.innerHTML = currentList.map((item, idx) => {
+                    const isActive = idx === currentIndex;
+                    const paddedIdx = String(idx + 1).padStart(2, '0');
+                    return `
+                        <div class="p-3.5 rounded-xl border transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                            isActive 
+                            ? 'bg-amber-500/10 border-amber-500/40 text-amber-200' 
+                            : 'bg-[#0B0D12] border-[#222938] text-slate-300 hover:bg-[#1A2130]'
+                        }">
+                            <div class="flex items-start gap-3 flex-1 cursor-pointer" onclick="jumpToAgenda(${idx})">
+                                <span class="font-mono text-xs font-bold text-slate-500 mt-0.5">${paddedIdx}</span>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="tabular-numbers text-xs font-bold ${isActive ? 'text-amber-400' : 'text-slate-400'}">${item.start} - ${item.end}</span>
+                                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#121620] text-slate-400 border border-[#222938] font-mono">${item.duration}</span>
+                                        ${isActive ? '<span class="text-[9px] bg-amber-500 text-slate-950 font-bold px-1.5 py-0.2 rounded">AKTIF</span>' : ''}
+                                    </div>
+                                    <div class="font-semibold text-sm mt-0.5 text-slate-200">${item.agenda}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0">
+                                <button onclick="openEditModal(${idx})" class="p-2 rounded-lg bg-[#121620] hover:bg-amber-500/20 hover:text-amber-300 text-slate-400 border border-[#222938] text-xs transition" title="Edit Script Agenda Ini">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="deleteAgenda(${idx})" class="p-2 rounded-lg bg-[#121620] hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 border border-[#222938] text-xs transition" title="Hapus Agenda Ini">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                                <button onclick="jumpToAgenda(${idx})" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold transition">
+                                    Buka
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAgendaModal() {
+            document.getElementById('agendaModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
